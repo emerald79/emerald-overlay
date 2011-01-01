@@ -1,0 +1,11 @@
+--- Makefile.in.orig	2007-01-21 20:28:58.000000000 +0100
++++ Makefile.in	2009-07-17 13:59:13.718637052 +0200
+@@ -31,7 +31,7 @@ BINDEST = @sbindir@
+ # Pathname of directory to install the man page
+ MANDEST = @mandir@
+ # Pathname of directory to install database file
+-ARPDIR = $(prefix)/var/lib/arpwatch
++ARPDIR = @localstatedir@/arpwatch
+ ETHERCODESDIR = $(prefix)/share/arpwatch
+ 
+ # VPATH
