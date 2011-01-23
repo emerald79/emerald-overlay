@@ -9,7 +9,8 @@ SUPPORT_PYTHON_ABIS="1"
 
 DESCRIPTION="uptime client for uptime.uhuc.de"
 HOMEPAGE="http://uptime.uhuc.de"
-SRC_URI="http://git.kromonos.net/uptime.clt/snapshot/uptime.clt-${PV}.tar.gz"
+#SRC_URI="http://git.kromonos.net/uptime.clt/snapshot/uptime.clt-${PV}.tar.gz"
+SRC_URI="http://www.emi-sama.de/distfiles/uptime.clt-${PV}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
