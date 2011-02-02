@@ -45,7 +45,7 @@ LICENSE="GPL-2"
 SLOT="0"
 
 if [ "${PV%9999}" = "${PV}" ] ; then
-	KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd"
+	KEYWORDS="amd64 ~arm ppc ppc64 ~sparc x86 ~x86-fbsd"
 else
 	KEYWORDS=""
 fi
