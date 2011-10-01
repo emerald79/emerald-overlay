@@ -1,9 +1,9 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=2
-inherit eutils versionator games cmake-utils bzr
+inherit eutils versionator cmake-utils games bzr
 
 EBZR_REPO_URI="lp:widelands"
 MY_PV=$(get_version_component_range 3)
@@ -18,62 +18,45 @@ IUSE=""
 RDEPEND="dev-games/ggz-client-libs
 	dev-lang/lua
 	>=sys-libs/zlib-1.2.5.1-r1
-	media-libs/jpeg:7
-	media-libs/libpng:0
-	media-libs/libsdl[video]
 	media-libs/sdl-image[jpeg,png]
 	media-libs/sdl-mixer[vorbis]
 	media-libs/sdl-gfx
 	media-libs/sdl-net
-	media-libs/sdl-ttf
-	media-libs/tiff"
+	media-libs/glew
+	media-libs/sdl-ttf"
 DEPEND="${RDEPEND}
 	dev-libs/boost"
 
 S=${WORKDIR}/${P}
 
-sed_macros() {
-	# clean up namespace a little #383179
-	# we do it here so we only have to tweak 2 files
-	sed -i -r 's:\<(O[FN])\>:_Z_\1:g' "$@" || die
-}
+CMAKE_BUILD_TYPE=Release
+PREFIX=${GAMES_DATADIR}/${PN}
 
 src_prepare() {
-	sed -i \
-		-e 's:__ppc__:__PPC__:' src/s2map.cc \
-		|| die "sed s2map.cc failed"
-
-	sed_macros "${S}"/src/io/filesystem/ioapi.h
-	sed_macros "${S}"/src/io/filesystem/unzip.cc
-	sed_macros "${S}"/src/io/filesystem/unzip.h
-	sed_macros "${S}"/src/io/filesystem/zip.h
+	sed -i -e 's:__ppc__:__PPC__:' src/s2map.cc || die
+	sed -i -e '74i#define OF(x) x' src/io/filesystem/{un,}zip.h || die
+	sed -i -e '22i#define OF(x) x' src/io/filesystem/ioapi.h || die
 }
 
 src_configure() {
 	mycmakeargs+=(
-	'-DWL_VERSION_STANDARD=true'
-	"-DCMAKE_INSTALL_PREFIX=${GAMES_DATADIR}/${PN}"
-	"-DCMAKE_BUILD_TYPE=Release"
-	"-DWL_INSTALL_PREFIX=${GAMES_PREFIX}"
-	"-DWL_INSTALL_DATADIR=${GAMES_DATADIR}/${PN}"
-	"-DWL_INSTALL_LOCALEDIR=locale"
-	"-DWL_INSTALL_BINDIR=${GAMES_BINDIR}"
+		'-DWL_VERSION_STANDARD=true'
+		"-DWL_INSTALL_PREFIX=${GAMES_PREFIX}"
+		"-DWL_INSTALL_DATADIR=${GAMES_DATADIR}/${PN}"
+		"-DWL_INSTALL_LOCALEDIR=${GAMES_DATADIR}/${PN}/locale"
+		"-DWL_INSTALL_BINDIR=${GAMES_BINDIR}"
 	)
 	cmake-utils_src_configure
 }
 
 src_compile() {
-	cmake-utils_src_compile -j1
+	cmake-utils_src_compile
 }
 
 src_install() {
 	cmake-utils_src_install
-	dodir "${GAMES_DATADIR}"/"${PN}"
-	insinto "${GAMES_DATADIR}"/"${PN}"
-	doins -r campaigns fonts global maps music pics sound tribes txts worlds || die
-	newicon pics/wl-ico-128.png ${PN}.png
+	newicon pics/wl-ico-128.png ${PN}.png || die
 	make_desktop_entry ${PN} Widelands
-
 	dodoc ChangeLog CREDITS
 	prepgamesdirs
 }
