@@ -39,9 +39,6 @@ sed_macros() {
 }
 
 src_prepare() {
-#	epatch "${FILESDIR}"/${PN}-0.0.15-build.patch
-#		"${FILESDIR}"/${PN}-0.0.15-gcc45-fix.patch
-
 	sed -i \
 		-e 's:__ppc__:__PPC__:' src/s2map.cc \
 		|| die "sed s2map.cc failed"
