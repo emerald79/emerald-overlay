@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-<herd>no-herd</herd>
+<herd>sound</herd>
 <maintainer>
   <email>dirk@liji.de</email>
   <name>Dirk Schoebel</name>
 </maintainer>
+<use>
+  <flag name="mp3-streaming">Enable MP3 streaming</flag>
+  <flag name="mp3-tagging">Enable MP3 tagging</flag>
+</use>
 </pkgmetadata>
