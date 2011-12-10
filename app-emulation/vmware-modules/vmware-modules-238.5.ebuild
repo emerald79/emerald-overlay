@@ -28,10 +28,8 @@ S=${WORKDIR}
 
 pkg_setup() {
 	CONFIG_CHECK="~HIGH_RES_TIMERS"
-	if kernel_is ge 2 6 37; then
-		if kernel_is le 2 6 38; then
-			CONFIG_CHECK="${CONFIG_CHECK} BKL"
-		fi
+	if kernel_is ge 2 6 37 && kernel_is lt 2 6 39; then
+		CONFIG_CHECK="${CONFIG_CHECK} BKL"
 	fi
 
 	linux-info_pkg_setup
@@ -64,8 +62,9 @@ src_prepare() {
 	epatch "${FILESDIR}/${PV_MAJOR}-makefile-kernel-dir.patch"
 	epatch "${FILESDIR}/${PV_MAJOR}-makefile-include.patch"
 	epatch "${FILESDIR}/${PV_MAJOR}-jobserver.patch"
-	epatch "${FILESDIR}/vmware-modules-linux-2.6.39.patch"
 	kernel_is ge 2 6 37 && epatch "${FILESDIR}/${PV_MAJOR}-sema.patch"
+	kernel_is ge 2 6 39 && epatch "${FILESDIR}/${PV_MAJOR}-2.6.39.patch"
+	epatch "${FILESDIR}/${PV_MAJOR}-netdevice.patch"
 }
 
 src_install() {
