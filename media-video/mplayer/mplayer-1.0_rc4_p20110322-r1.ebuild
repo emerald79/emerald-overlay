@@ -21,7 +21,7 @@ ftp gif ggi gsm +iconv ipv6 jack joystick jpeg jpeg2k kernel_linux ladspa
 libcaca libmpeg2 lirc +live lzo mad md5sum +mmx mmxext mng +mp3 mpg123 nas
 +network nut openal amr +opengl +osdmenu oss png pnm pulseaudio pvr +quicktime
 radio +rar +real +rtc rtmp samba +shm +schroedinger sdl +speex sse sse2 ssse3
-tga +theora +tremor +truetype +toolame +twolame +unicode v4l v4l2 vdpau vidix
+tga +theora +tremor +truetype +toolame +twolame +unicode v4l vdpau vidix
 +vorbis vpx win32codecs +X +x264 xanim xinerama +xscreensaver +xv +xvid xvmc
 gmplayer
 zoran"
@@ -641,7 +641,7 @@ src_compile() {
 		local ALLOWED_LINGUAS="cs de en es fr hu it pl ru zh_CN"
 		local BUILT_DOCS=""
 		for i in ${LINGUAS} ; do
-			hasq ${i} ${ALLOWED_LINGUAS} && BUILT_DOCS+=" ${i}"
+			has ${i} ${ALLOWED_LINGUAS} && BUILT_DOCS+=" ${i}"
 		done
 		if [[ -z $BUILT_DOCS ]]; then
 			emake -j1 -C DOCS/xml html-chunked
