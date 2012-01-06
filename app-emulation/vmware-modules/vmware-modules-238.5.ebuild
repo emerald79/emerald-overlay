@@ -65,6 +65,7 @@ src_prepare() {
 	kernel_is ge 2 6 37 && epatch "${FILESDIR}/${PV_MAJOR}-sema.patch"
 	kernel_is ge 2 6 39 && epatch "${FILESDIR}/${PV_MAJOR}-2.6.39.patch"
 	epatch "${FILESDIR}/${PV_MAJOR}-netdevice.patch"
+	epatch "${FILESDIR}/${PV_MAJOR}-3.2.0.patch"
 }
 
 src_install() {
