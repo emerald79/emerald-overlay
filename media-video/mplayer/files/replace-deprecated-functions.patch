@@ -1,0 +1,31 @@
+commit 6828a0ec7c5827c23d91b4509edd6ec94c4a62c7
+Author: ib <ib@b3059339-0415-0410-9bf9-f77b7e298cf2>
+Date:   Fri Jan 13 15:25:13 2012 +0000
+
+    Replace deprecated avcodec functions by new ones.
+    
+    
+    git-svn-id: svn://svn.mplayerhq.hu/mplayer/trunk@34556 b3059339-0415-0410-9bf9-f77b7e298cf2
+
+diff --git a/gui/util/bitmap.c b/gui/util/bitmap.c
+index 7ba17b4..3c3fefa 100644
+--- a/gui/util/bitmap.c
++++ b/gui/util/bitmap.c
+@@ -78,7 +78,7 @@ static int pngRead(const char *fname, guiImage *img)
+     fread(data, len, 1, file);
+     fclose(file);
+ 
+-    avctx = avcodec_alloc_context();
++    avctx = avcodec_alloc_context3(NULL);
+     frame = avcodec_alloc_frame();
+ 
+     if (!(avctx && frame)) {
+@@ -89,7 +89,7 @@ static int pngRead(const char *fname, guiImage *img)
+     }
+ 
+     avcodec_register_all();
+-    avcodec_open(avctx, avcodec_find_decoder(CODEC_ID_PNG));
++    avcodec_open2(avctx, avcodec_find_decoder(CODEC_ID_PNG), NULL);
+ 
+     av_init_packet(&pkt);
+     pkt.data = data;
