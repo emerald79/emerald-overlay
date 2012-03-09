@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/net-analyzer/arpwatch-ng/arpwatch-ng-1.7.ebuild,v 1.6 2007/11/14 04:24:43 beandog Exp $
 
@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~ppc ~x86"
 IUSE="update-ethercodes"
 
-DEPEND="virtual/libpcap
+DEPEND="net-libs/libpcap
 	!net-analyzer/arpwatch
 	sys-apps/sed
 	|| ( sys-apps/gawk sys-apps/mawk )"
