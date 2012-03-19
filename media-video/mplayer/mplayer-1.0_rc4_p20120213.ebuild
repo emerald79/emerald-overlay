@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.0_rc4_p20120213.ebuild,v 1.1 2012/02/13 11:14:48 aballier Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.0_rc4_p20120213.ebuild,v 1.3 2012/03/18 13:47:12 ssuominen Exp $
 
 EAPI=4
 
@@ -12,7 +12,7 @@ inherit toolchain-funcs eutils flag-o-matic multilib base ${SVN_ECLASS}
 
 IUSE="3dnow 3dnowext +a52 aalib +alsa altivec aqua +ass bidi bindist bl bluray
 bs2b cddb +cdio cdparanoia cpudetection debug dga
-directfb doc +dts +dv dvb +dvd +dvdnav dxr3 +enca +encode esd faac +faad fbcon
+directfb doc +dts +dv dvb +dvd +dvdnav dxr3 +enca +encode faac +faad fbcon
 ftp gif ggi gsm +iconv ipv6 jack joystick jpeg jpeg2k kernel_linux ladspa
 libcaca libmpeg2 lirc +live lzo mad md5sum +mmx mmxext mng +mp3 nas
 +network nut openal +opengl +osdmenu oss png pnm pulseaudio pvr +quicktime
@@ -84,7 +84,7 @@ RDEPEND+="
 	directfb? ( dev-libs/DirectFB )
 	dts? ( media-libs/libdca )
 	dv? ( media-libs/libdv )
-	dvb? ( media-tv/linuxtv-dvb-headers )
+	dvb? ( virtual/linuxtv-dvb-headers )
 	dvd? ( >=media-libs/libdvdread-4.1.3 )
 	dvdnav? ( >=media-libs/libdvdnav-4.1.3 )
 	encode? (
@@ -95,7 +95,6 @@ RDEPEND+="
 		x264? ( >=media-libs/x264-0.0.20100423 )
 		xvid? ( media-libs/xvid )
 	)
-	esd? ( media-sound/esound )
 	enca? ( app-i18n/enca )
 	faad? ( media-libs/faad2 )
 	ggi? ( media-libs/libggi media-libs/libggiwmh )
@@ -168,7 +167,7 @@ DEPEND="${RDEPEND}
 SLOT="0"
 LICENSE="GPL-2"
 if [[ ${PV} != *9999* ]]; then
-	KEYWORDS="~amd64 ~hppa ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
+	KEYWORDS="~amd64 ~hppa ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
 else
 	KEYWORDS=""
 fi
@@ -497,7 +496,8 @@ src_configure() {
 	################
 	# Audio Output #
 	################
-	uses="alsa esd jack ladspa nas openal"
+	myconf+=" --disable-esd"
+	uses="alsa jack ladspa nas openal"
 	for i in ${uses}; do
 		use ${i} || myconf+=" --disable-${i}"
 	done
