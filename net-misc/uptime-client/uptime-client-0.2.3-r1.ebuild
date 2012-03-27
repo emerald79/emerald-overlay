@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -26,6 +26,8 @@ MY_S="${S/%${P}/uptime.clt-${PV}}"
 S="${MY_S}"
 
 src_prepare() {
+	sed -i -e 's,#!/usr/bin/env python,#!/usr/bin/env python2,' \
+		"${S}"/client.py || die "sed failed"
 	sed -i -e 's#utime_client\.xml#/etc/uptime-client.conf#' \
 		"${S}"/client.py || die "sed failed"
 	sed -i -e 's#kromonos.net#uptime.uhuc.de#;s#9090#54296#' \
