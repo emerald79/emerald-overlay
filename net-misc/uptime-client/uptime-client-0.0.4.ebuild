@@ -9,8 +9,7 @@ SUPPORT_PYTHON_ABIS="1"
 
 DESCRIPTION="uptime client for uptime.uhuc.de"
 HOMEPAGE="http://uptime.uhuc.de"
-#SRC_URI="http://git.kromonos.net/uptime.clt/snapshot/uptime.clt-${PV}.tar.gz"
-SRC_URI="http://www.emi-sama.de/distfiles/uptime.clt-${PV}.tar.gz"
+SRC_URI="http://www.emi-sama.de/distfiles/${PN}-${PV}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -22,26 +21,23 @@ RDEPEND=">=dev-lang/python-2.5.0[xml]"
 
 RESTRICT_PYTHON_ABIS="3.*"
 
-MY_S="${S/%${P}/uptime.clt-${PV}}"
-S="${MY_S}"
-
 src_prepare() {
 	sed -i -e 's,#!/usr/bin/env python,#!/usr/bin/env python2,' \
-		"${S}"/client.py || die "sed failed"
+		"${S}"/src/uptime_client.py || die "sed failed"
 	sed -i -e 's#utime_client\.xml#/etc/uptime-client.conf#' \
-		"${S}"/client.py || die "sed failed"
+		"${S}"/src/uptime_client.py || die "sed failed"
 	sed -i -e 's#kromonos.net#uptime.uhuc.de#;s#9090#54296#' \
-		"${S}"/utime_client.xml.example || die "sed failed"
+		"${S}"/src/utime_client.xml.example || die "sed failed"
 
 	echo "#/usr/bin/uptime-client" > "${S}"/uptime-client.cron
 }
 
 src_install() {
-	newbin client.py uptime-client
+	newbin src/uptime_client.py uptime-client || die
 	insinto /etc
-	newins utime_client.xml.example uptime-client.conf
+	newins src/utime_client.xml.example uptime-client.conf || die
 	exeinto /etc/cron.hourly
-	newexe uptime-client.cron uptime-client
+	newexe uptime-client.cron uptime-client || die
 
-	dodoc TODO || die "dodoc failed"
+	dodoc AUTHORS NEWS README || die "dodoc failed"
 }
