@@ -1,15 +1,15 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/gnome-extra/gnome-commander/gnome-commander-1.2.8.9.ebuild,v 1.0 2010/12/31 23:21:08 eva Exp $
 
-EAPI="2"
+EAPI="4"
 
 inherit gnome2 flag-o-matic
 
 DESCRIPTION="A full featured, dual-pane file manager for Gnome2"
 HOMEPAGE="http://www.nongnu.org/gcmd/"
 
-SRC_URI="http://ftp.gnome.org/pub/GNOME/sources/${PN}/1.2/${P}.tar.bz2";
+SRC_URI="http://ftp.gnome.org/pub/GNOME/sources/${PN}/1.2/${P}.tar.xz";
 
 KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 
@@ -41,7 +41,7 @@ RDEPEND=">=x11-libs/gtk+-2.8.0
 
 DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.35.0
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 DOCS="AUTHORS BUGS ChangeLog NEWS README TODO"
 
