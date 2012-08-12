@@ -34,8 +34,8 @@ PREFIX=${GAMES_DATADIR}/${PN}
 
 src_prepare() {
 	sed -i -e 's:__ppc__:__PPC__:' src/s2map.cc || die
-	sed -i -e '74i#define OF(x) x' src/io/filesystem/{un,}zip.h || die
-	sed -i -e '22i#define OF(x) x' src/io/filesystem/ioapi.h || die
+#	sed -i -e '74i#define OF(x) x' src/io/filesystem/{un,}zip.h || die
+#	sed -i -e '22i#define OF(x) x' src/io/filesystem/ioapi.h || die
 }
 
 src_configure() {
