@@ -1,0 +1,25 @@
+#!/sbin/runscript
+
+# Run this before 70-persistent-net.rules to allow swapping to eth*
+#
+# OpenRC, example: rc-update add $script_name sysinit
+#
+# Then you can use rules like, example:
+#
+# SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="bc:ae:c5:59:5a:85", NAME="eth0"
+# SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="bc:ae:c5:59:5a:fd", NAME="eth1"
+#
+# You need to have sys-apps/iproute2 installed.
+
+description="Renames ethX to ethXtmp to avoid udev rename conflicts"
+
+depend() {
+	before dev
+}
+
+start() {
+	local i
+	for i in {0..9999}; do
+		ip link set dev eth${i} name eth${i}tmp 2>/dev/null
+	done
+}
