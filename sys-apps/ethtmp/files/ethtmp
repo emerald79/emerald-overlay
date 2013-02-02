@@ -19,7 +19,8 @@ depend() {
 
 start() {
 	local i
-	for i in {0..9999}; do
+	for i in {0..99}; do
 		ip link set dev eth${i} name eth${i}tmp 2>/dev/null
 	done
+	true
 }
