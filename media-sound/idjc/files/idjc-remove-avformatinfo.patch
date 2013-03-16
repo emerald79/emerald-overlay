@@ -1,0 +1,59 @@
+From f8023411f6c0ccae6fa58e88f9f353c912a27edc Mon Sep 17 00:00:00 2001
+From: Stephen Fairchild <s-fairchild@users.sourceforge.net>
+Date: Fri, 30 Nov 2012 20:31:43 +0000
+Subject: [PATCH] Removed some barely used but high maintenance code.
+
+diff --git a/c/avcodecdecode.c b/c/avcodecdecode.c
+index dded636..cac9227 100644
+--- a/c/avcodecdecode.c
++++ b/c/avcodecdecode.c
+@@ -331,31 +331,6 @@ int avcodecdecode_reg(struct xlplayer *xlplayer)
+     
+     return ACCEPTED;
+     }
+-
+-void avformatinfo(char *pathname)
+-    {
+-    AVFormatContext *ic = NULL;
+-    AVDictionary *mc;
+-    AVDictionaryEntry *tag;
+-    const int flags = AV_METADATA_DONT_STRDUP_KEY | AV_METADATA_DONT_STRDUP_VAL;
+-    char *keys[] = {"artist", "title", "album", NULL}, **kp;
+-    
+-    if (avformat_open_input(&ic, pathname, NULL, NULL) >= 0 && avformat_find_stream_info(ic, NULL) >= 0)
+-        {
+-        mc = ic->metadata;
+-
+-        for(kp = keys; *kp; kp++)
+-            {
+-            if ((tag = av_dict_get(mc, *kp, NULL, flags)))
+-                fprintf(g.out, "avformatinfo: %s=%s\n", tag->key, tag->value);
+-            }
+-      
+-        fprintf(g.out, "avformatinfo: duration=%d\n", (int)(ic->duration / AV_TIME_BASE));
+-        avformat_close_input(&ic);
+-        }
+-    fprintf(g.out, "avformatinfo: end\n");
+-    fflush(g.out);
+-    }
+     
+ #endif /* HAVE_AVUTIL */
+ #endif /* HAVE_AVFORMAT */
+diff --git a/c/mixer.c b/c/mixer.c
+index 0b89b59..6f146d5 100644
+--- a/c/mixer.c
++++ b/c/mixer.c
+@@ -1326,13 +1326,6 @@ int mixer_main()
+     if (!strcmp(action, "sndfileinforequest"))
+         sndfileinfo(sndfilepathname);
+ 
+-#ifdef HAVE_AVCODEC
+-#ifdef HAVE_AVFORMAT
+-    if (!strcmp(action, "avformatinforequest"))
+-        avformatinfo(avformatpathname);
+-#endif
+-#endif
+-
+ #ifdef HAVE_SPEEX
+     if (!(strcmp(action, "speexreadtagrequest")))
+         speex_tag_read(speexpathname);
