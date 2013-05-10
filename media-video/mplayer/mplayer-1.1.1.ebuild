@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.1-r1.ebuild,v 1.21 2013/03/21 07:08:36 ssuominen Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.1.1.ebuild,v 1.1 2013/05/08 08:22:34 aballier Exp $
 
 EAPI=4
 
@@ -171,7 +171,7 @@ DEPEND="${RDEPEND}
 SLOT="0"
 LICENSE="GPL-2"
 if [[ ${PV} != *9999* ]]; then
-	KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ppc ppc64 ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
+	KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
 else
 	KEYWORDS=""
 fi
@@ -202,9 +202,9 @@ REQUIRED_USE="bindist? ( !faac !win32codecs )
 
 PATCHES=(
 	"${FILESDIR}/${PN}-1.0_rc4-pkg-config.patch"
-	"${FILESDIR}/${P}-ffmpeg.patch"
-	"${FILESDIR}/${P}-libav-0.8.patch"
-	"${FILESDIR}/${P}-codecid.patch"
+	"${FILESDIR}/${PN}-1.1-ffmpeg.patch"
+	"${FILESDIR}/${PN}-1.1-libav-0.8.patch"
+	"${FILESDIR}/${PN}-1.1-codecid.patch"
 )
 
 pkg_setup() {
@@ -287,9 +287,9 @@ src_prepare() {
 
 	base_src_prepare
 	if has_version '>=media-video/libav-9_rc' || has_version '>=media-video/ffmpeg-1.1' ; then
-		epatch "${FILESDIR}/${P}-libav-9.patch" \
-			"${FILESDIR}/${P}-planaraudio.patch" \
-			"${FILESDIR}/${P}-missingbreak.patch"
+		epatch "${FILESDIR}/${PN}-1.1-libav-9.patch" \
+			"${FILESDIR}/${PN}-1.1-planaraudio.patch" \
+			"${FILESDIR}/${PN}-1.1-missingbreak.patch"
 	fi
 
 	# Use sane default for >=virtual/udev-197
