@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/app-office/dia/dia-0.97.1.ebuild,v 1.13 2011/08/07 16:14:59 ssuominen Exp $
 
@@ -43,8 +43,10 @@ RDEPEND=">=x11-libs/gtk+-2.6.0:2
 
 DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.35.0
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	doc? ( dev-libs/libxslt )"
+
+WANT_AUTOMAKE="1.12"
 
 pkg_setup() {
 	DOCS="AUTHORS ChangeLog KNOWN_BUGS MAINTAINERS NEWS README RELEASE-PROCESS TODO"
@@ -64,6 +66,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}"/"${P}"-glib-fix.patch
+
 	gnome2_src_prepare
 
 	# Fix compilation with USE="python", bug #271855
