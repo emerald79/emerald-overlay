@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.1.1.ebuild,v 1.1 2013/05/08 08:22:34 aballier Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.1.1.ebuild,v 1.4 2013/06/13 18:12:40 ulm Exp $
 
 EAPI=4
 
@@ -16,9 +16,9 @@ directfb doc +dts +dv dvb +dvd +dvdnav dxr3 +enca +encode faac +faad fbcon
 ftp gif ggi gsm +iconv ipv6 jack joystick jpeg jpeg2k kernel_linux ladspa
 +libass libcaca libmpeg2 lirc +live lzo mad md5sum +mmx mmxext mng +mp3 nas
 +network nut openal +opengl +osdmenu oss png pnm pulseaudio pvr +quicktime
-radio +rar +real +rtc rtmp samba +shm sdl +speex sse sse2 ssse3
+radio +rar +rtc rtmp samba +shm sdl +speex sse sse2 ssse3
 tga +theora +tremor +truetype +toolame +twolame +unicode v4l vdpau vidix
-+vorbis win32codecs +X +x264 xanim xinerama +xscreensaver +xv +xvid xvmc
++vorbis +X +x264 xanim xinerama +xscreensaver +xv +xvid xvmc
 gmplayer
 zoran"
 
@@ -65,11 +65,6 @@ RDEPEND+="
 	app-arch/bzip2
 	sys-libs/zlib
 	>=virtual/ffmpeg-0.10.3
-	!bindist? (
-		x86? (
-			win32codecs? ( media-libs/win32codecs )
-		)
-	)
 	gmplayer? (
 		media-libs/libpng
 		x11-libs/gtk+:2
@@ -106,7 +101,7 @@ RDEPEND+="
 	iconv? ( virtual/libiconv )
 	jack? ( media-sound/jack-audio-connection-kit )
 	jpeg? ( virtual/jpeg )
-	jpeg2k? ( media-libs/openjpeg )
+	jpeg2k? ( media-libs/openjpeg:0 )
 	ladspa? ( media-libs/ladspa-sdk )
 	libass? ( >=media-libs/libass-0.9.10[enca?] )
 	libcaca? ( media-libs/libcaca )
@@ -184,7 +179,7 @@ fi
 # libvorbis require external tremor to work
 # radio requires oss or alsa backend
 # xvmc requires xvideo support
-REQUIRED_USE="bindist? ( !faac !win32codecs )
+REQUIRED_USE="bindist? ( !faac )
 	dvdnav? ( dvd )
 	libass? ( truetype )
 	truetype? ( iconv )
@@ -467,22 +462,8 @@ src_configure() {
 	# Binary codecs #
 	#################
 	# bug 213836
-	if ! use x86 || ! use win32codecs; then
-		use quicktime || myconf+=" --disable-qtx"
-	fi
-
-	######################
-	# RealPlayer support #
-	######################
-	# Realplayer support shows up in four places:
-	# - libavcodec (internal)
-	# - win32codecs
-	# - realcodecs (win32codecs libs)
-	# - realcodecs (realplayer libs)
-
-	# internal
-	use real || myconf+=" --disable-real"
-	myconf+=" $(use_enable win32codecs win32dll)"
+	use quicktime || myconf+=" --disable-qtx"
+	myconf+=" --disable-real --disable-win32dll"
 
 	################
 	# Video Output #
@@ -632,10 +613,6 @@ src_install() {
 	dodoc DOCS/tech/{*.txt,MAINTAINERS,mpsub.sub,playtree,TODO,wishlist}
 	docinto TOOLS/
 	dodoc -r TOOLS
-	if use real; then
-		docinto tech/realcodecs/
-		dodoc DOCS/tech/realcodecs/*
-	fi
 	docinto tech/mirrors/
 	dodoc DOCS/tech/mirrors/*
 
