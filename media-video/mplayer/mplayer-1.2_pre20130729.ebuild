@@ -1,8 +1,8 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.1-r1.ebuild,v 1.24 2013/06/13 18:12:40 ulm Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.2_pre20130729.ebuild,v 1.2 2013/08/11 22:52:39 aballier Exp $
 
-EAPI=4
+EAPI=5
 
 EGIT_REPO_URI="git://git.videolan.org/ffmpeg.git"
 ESVN_REPO_URI="svn://svn.mplayerhq.hu/mplayer/trunk"
@@ -10,15 +10,15 @@ ESVN_REPO_URI="svn://svn.mplayerhq.hu/mplayer/trunk"
 
 inherit toolchain-funcs eutils flag-o-matic multilib base ${SVN_ECLASS}
 
-IUSE="3dnow 3dnowext +a52 aalib +alsa altivec aqua bidi bindist bl bluray
+IUSE="3dnow 3dnowext a52 aalib +alsa altivec aqua bidi bindist bl bluray
 bs2b cddb +cdio cdparanoia cpudetection debug dga
-directfb doc +dts +dv dvb +dvd +dvdnav dxr3 +enca +encode faac +faad fbcon
+directfb doc dts dv dvb +dvd +dvdnav dxr3 +enca +encode faac faad fbcon
 ftp gif ggi gsm +iconv ipv6 jack joystick jpeg jpeg2k kernel_linux ladspa
-+libass libcaca libmpeg2 lirc +live lzo mad md5sum +mmx mmxext mng +mp3 nas
-+network nut openal +opengl +osdmenu oss png pnm pulseaudio pvr +quicktime
-radio +rar +rtc rtmp samba +shm sdl +speex sse sse2 ssse3
-tga +theora +tremor +truetype +toolame +twolame +unicode v4l vdpau vidix
-+vorbis +X +x264 xanim xinerama +xscreensaver +xv +xvid xvmc
++libass libcaca libmpeg2 lirc live lzo mad md5sum +mmx mmxext mng mp3 nas
++network nut openal opengl +osdmenu oss png pnm pulseaudio pvr
+radio rar rtc rtmp samba +shm sdl speex sse sse2 ssse3
+tga theora tremor +truetype toolame twolame +unicode v4l vdpau vidix
+vorbis +X x264 xanim xinerama +xscreensaver +xv xvid xvmc
 gmplayer
 zoran"
 
@@ -35,7 +35,7 @@ FONT_URI="
 "
 if [[ ${PV} == *9999* ]]; then
 	RELEASE_URI=""
-elif [ "${PV%_rc*}" = "${PV}" ]; then
+elif [ "${PV%_rc*}" = "${PV}" -a "${PV%_pre*}" = "${PV}" ]; then
 	MY_P="MPlayer-${PV}"
 	S="${WORKDIR}/${MY_P}"
 	RELEASE_URI="mirror://mplayer/releases/${MY_P}.tar.xz"
@@ -64,7 +64,7 @@ RDEPEND+="
 	sys-libs/ncurses
 	app-arch/bzip2
 	sys-libs/zlib
-	>=virtual/ffmpeg-0.10.3
+	|| ( >=media-video/ffmpeg-1.2.1:0= >=media-video/libav-9.8:= )
 	gmplayer? (
 		media-libs/libpng
 		x11-libs/gtk+:2
@@ -76,7 +76,7 @@ RDEPEND+="
 	bidi? ( dev-libs/fribidi )
 	bluray? ( >=media-libs/libbluray-0.2.1 )
 	bs2b? ( media-libs/libbs2b )
-	cdio? ( || ( dev-libs/libcdio-paranoia <dev-libs/libcdio-0.90[-minimal] ) )
+	cdio? ( dev-libs/libcdio )
 	cdparanoia? ( !cdio? ( media-sound/cdparanoia ) )
 	dga? ( x11-libs/libXxf86dga )
 	directfb? ( dev-libs/DirectFB )
@@ -90,7 +90,7 @@ RDEPEND+="
 		twolame? ( media-sound/twolame )
 		faac? ( media-libs/faac )
 		mp3? ( media-sound/lame )
-		x264? ( >=media-libs/x264-0.0.20100423 )
+		x264? ( >=media-libs/x264-0.0.20100423:= )
 		xvid? ( media-libs/xvid )
 	)
 	enca? ( app-i18n/enca )
@@ -130,9 +130,10 @@ RDEPEND+="
 	sdl? ( media-libs/libsdl )
 	speex? ( media-libs/speex )
 	theora? ( media-libs/libtheora[encode?] )
+	tremor? ( media-libs/tremor )
 	truetype? ( ${FONT_RDEPS} )
 	vdpau? ( x11-libs/libvdpau )
-	vorbis? ( media-libs/libvorbis )
+	vorbis? ( !tremor? ( media-libs/libvorbis ) )
 	X? ( ${X_RDEPS}	)
 	xanim? ( media-video/xanim )
 	xinerama? ( x11-libs/libXinerama )
@@ -166,41 +167,37 @@ DEPEND="${RDEPEND}
 SLOT="0"
 LICENSE="GPL-2"
 if [[ ${PV} != *9999* ]]; then
-	KEYWORDS="alpha amd64 arm hppa ia64 ppc ppc64 sparc x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
+	KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
 else
 	KEYWORDS=""
 fi
 
-# faac codecs are nonfree, win32codecs are nonfree
+# faac codecs are nonfree
 # libcdio support: prefer libcdio over cdparanoia and don't check for cddb w/cdio
 # dvd navigation requires dvd read support
 # ass and freetype font require iconv and ass requires freetype fonts
 # unicode transformations are usefull only with iconv
-# libvorbis require external tremor to work
 # radio requires oss or alsa backend
 # xvmc requires xvideo support
-REQUIRED_USE="bindist? ( !faac )
-	dvdnav? ( dvd )
-	libass? ( truetype )
-	truetype? ( iconv )
-	dxr3? ( X )
-	ggi? ( X )
-	xinerama? ( X )
+REQUIRED_USE="
+	bindist? ( !faac )
 	dga? ( X )
-	opengl? ( || ( X aqua ) )
-	osdmenu? ( || ( X aqua ) )
+	dvdnav? ( dvd )
+	dxr3? ( X )
+	enca? ( iconv )
+	ggi? ( X )
+	libass? ( truetype )
+	opengl? ( X )
+	osdmenu? ( X )
+	truetype? ( iconv )
 	vdpau? ( X )
 	vidix? ( X )
+	xinerama? ( X )
 	xscreensaver? ( X )
 	xv? ( X )
 	xvmc? ( xv )"
 
-PATCHES=(
-	"${FILESDIR}/${PN}-1.0_rc4-pkg-config.patch"
-	"${FILESDIR}/${P}-ffmpeg.patch"
-	"${FILESDIR}/${P}-libav-0.8.patch"
-	"${FILESDIR}/${P}-codecid.patch"
-)
+PATCHES=( "${FILESDIR}/${P}-compat.patch" )
 
 pkg_setup() {
 	if [[ ${PV} == *9999* ]]; then
@@ -229,6 +226,12 @@ pkg_setup() {
 		ewarn "mplayer for this system. Also, if your compile fails, try"
 		ewarn "disabling this use flag."
 	fi
+
+	if has_version 'media-video/libav' ; then
+		ewarn "Please note that upstream uses media-video/ffmpeg."
+		ewarn "media-video/libav should be fine in theroy but if you"
+		ewarn "experience any problem, try to move to media-video/ffmpeg."
+	fi
 }
 
 src_unpack() {
@@ -241,7 +244,7 @@ src_unpack() {
 		unpack ${A}
 	fi
 
-	if [[ ${PV} = *9999* ]] || [[ "${PV%_rc*}" = "${PV}" ]]; then
+	if [[ ${PV} = *9999* ]] || [ "${PV%_rc*}" = "${PV}" -a "${PV%_pre*}" = "${PV}" ]; then
 		cd "${S}"
 		cp "${FILESDIR}/dump_ffmpeg.sh" . || die
 		chmod +x dump_ffmpeg.sh
@@ -273,19 +276,7 @@ src_prepare() {
 	# fix path to bash executable in configure scripts
 	sed -i -e "1c\#!${EPREFIX}/bin/bash" configure version.sh || die
 
-	if has_version dev-libs/libcdio-paranoia; then
-		sed -i \
-			-e 's:cdio/cdda.h:cdio/paranoia/cdda.h:' \
-			-e 's:cdio/paranoia.h:cdio/paranoia/paranoia.h:' \
-			configure stream/stream_cdda.c || die
-	fi
-
 	base_src_prepare
-	if has_version '>=media-video/libav-9_rc' || has_version '>=media-video/ffmpeg-1.1' ; then
-		epatch "${FILESDIR}/${P}-libav-9.patch" \
-			"${FILESDIR}/${P}-planaraudio.patch" \
-			"${FILESDIR}/${P}-missingbreak.patch"
-	fi
 
 	# Use sane default for >=virtual/udev-197
 	sed -i -e '/default_dvd_device/s:/dev/dvd:/dev/cdrom:' configure || die
@@ -309,11 +300,15 @@ src_configure() {
 	# disable svga since we don't want it
 	# disable arts since we don't have kde3
 	# always disable internal ass
+	# disable opus and ilbc since it only controls support in internal
+	#         ffmpeg which we do not use
 	myconf+="
 		--disable-svga --disable-svgalib_helper
 		--disable-ass-internal
 		--disable-arts
 		--disable-kai
+		--disable-libopus
+		--disable-libilbc
 		$(use_enable network networking)
 		$(use_enable joystick)
 	"
@@ -404,24 +399,18 @@ src_configure() {
 	myconf+=" --disable-musepack" # Use internal musepack codecs for SV7 and SV8 support
 	myconf+=" --disable-libmpeg2-internal" # always use system media-libs/libmpeg2
 	use dts || myconf+=" --disable-libdca"
-	# Disable internal mp3lib, bug #384849
-	# Samuli Suominen: Looks like MPlayer in Portage is using internal mp3lib by
-	# default, where as mpg123 upstream has incorporated all the optimizations
-	# from mplayer's mp3lib	in libmpg123 and more.
-	# It makes very little sense to use the internal copy as default anymore.
-	myconf+=" --disable-mp3lib"
 	if ! use mp3; then
 		myconf+="
 			--disable-mp3lame
 			--disable-mpg123
 		"
 	fi
-	uses="a52 bs2b dv gsm lzo rtmp"
+	uses="a52 bs2b dv gsm lzo rtmp vorbis"
 	for i in ${uses}; do
 		use ${i} || myconf+=" --disable-lib${i}"
 	done
 
-	uses="faad gif jpeg libmpeg2 live mad mng png pnm speex tga theora xanim"
+	uses="faad gif jpeg libmpeg2 live mad mng png pnm speex tga theora tremor xanim"
 	for i in ${uses}; do
 		if [ "${i}" = "png" ]; then
 			if ! use gmplayer; then
@@ -434,16 +423,7 @@ src_configure() {
 		use ${i} || myconf+=" --disable-${i}"
 	done
 	use jpeg2k || myconf+=" --disable-libopenjpeg"
-	if use vorbis || use tremor; then
-		use tremor || myconf+=" --disable-tremor-internal"
-		use vorbis || myconf+=" --disable-libvorbis"
-	else
-		myconf+="
-			--disable-tremor-internal
-			--disable-tremor
-			--disable-libvorbis
-		"
-	fi
+
 	# Encoding
 	uses="faac x264 xvid toolame twolame"
 	if use encode; then
@@ -461,9 +441,7 @@ src_configure() {
 	#################
 	# Binary codecs #
 	#################
-	# bug 213836
-	use quicktime || myconf+=" --disable-qtx"
-	myconf+=" --disable-real --disable-win32dll"
+	myconf+=" --disable-qtx --disable-real --disable-win32dll"
 
 	################
 	# Video Output #
@@ -564,7 +542,6 @@ src_configure() {
 		"
 	fi
 
-	tc-export PKG_CONFIG
 	./configure \
 		--cc="$(tc-getCC)" \
 		--host-cc="$(tc-getBUILD_CC)" \
