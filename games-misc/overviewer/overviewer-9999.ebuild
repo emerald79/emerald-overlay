@@ -21,10 +21,16 @@ EGIT_REPO_URI="git://github.com/overviewer/Minecraft-Overviewer.git"
 
 IUSE=""
 
+pkg_setup() {
+	python-single-r1_pkg_setup
+}
+
 src_compile() {
-	python2 setup.py build || die compile failed!
+	${PYTHON} setup.py build || die compile failed!
 }
 
 src_install() {
-	python2 setup.py install --no-compile -O2 --root "${D}" || die install failed!
+	${PYTHON} setup.py install --no-compile -O2 --root "${D}" || die install failed!
+
+	python_fix_shebang "${D}"
 }
