@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
-PYTHON_DEPEND="2:2.6:2.7"
+EAPI=4
+PYTHON_COMPAT=(python2_6 python2_7)
 
-inherit eutils git python
+inherit eutils git-2 python-single-r1
 
 DESCRIPTION="Generates large resolution images of a Minecraft map"
 HOMEPAGE="http://overviewer.org"
