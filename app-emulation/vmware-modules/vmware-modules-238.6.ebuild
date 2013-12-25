@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-modules/vmware-modules-238.6.ebuild,v 1.2 2012/12/12 11:46:57 ssuominen Exp $
 
-EAPI="2"
+EAPI="4"
 
-inherit eutils flag-o-matic linux-info linux-mod versionator
+inherit eutils flag-o-matic linux-info linux-mod user versionator udev
 
 PV_MAJOR=$(get_major_version)
 PV_MINOR=$(get_version_component_range 2)
@@ -66,6 +66,10 @@ src_prepare() {
 	kernel_is ge 2 6 39 && epatch "${FILESDIR}/${PV_MAJOR}-2.6.39.patch"
 	epatch "${FILESDIR}/${PV_MAJOR}-netdevice.patch"
 	epatch "${FILESDIR}/${PV_MAJOR}-3.2.0.patch"
+	epatch "${FILESDIR}/${PV_MAJOR}-d-make-root.patch"
+
+	# Allow user patches so they can support RC kernels and whatever else
+	epatch_user
 }
 
 src_install() {
@@ -76,6 +80,5 @@ src_install() {
 		KERNEL=="vmmon", GROUP="vmware", MODE=660
 		KERNEL=="vsock", GROUP="vmware", MODE=660
 	EOF
-	insinto /etc/udev/rules.d/
-	doins "${udevrules}"
+	udev_dorules "${udevrules}"
 }
