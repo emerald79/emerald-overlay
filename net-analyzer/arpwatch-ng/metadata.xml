@@ -7,7 +7,9 @@
   <name>Dirk Schoebel</name>
 </maintainer>
 <use>
+  <flag name="fancy-mac">Enables fancy mac address printing.</flag>
   <flag name="update-ethercodes">Updates ethernet codes in source prepare phase,
     requires an active internet connection during install.</flag>
+  <flag name="vlan">Enables support for vlan tags.</flag>
 </use>
 </pkgmetadata>

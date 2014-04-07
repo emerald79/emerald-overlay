@@ -6,8 +6,6 @@ EAPI="2"
 
 inherit eutils versionator
 
-PATCH_VER="0.4"
-
 DESCRIPTION="An ethernet monitor program that keeps track of ethernet/ip address pairings"
 HOMEPAGE="http://freequaos.host.sk/arpwatch/"
 SRC_URI="http://freequaos.host.sk/arpwatch/arpwatch-NG${PV}.tar.bz2"
@@ -15,7 +13,7 @@ SRC_URI="http://freequaos.host.sk/arpwatch/arpwatch-NG${PV}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~x86"
-IUSE="update-ethercodes"
+IUSE="fancy-mac update-ethercodes vlan"
 
 DEPEND="net-libs/libpcap
 	!net-analyzer/arpwatch
@@ -28,6 +26,10 @@ S="${WORKDIR}/arpwatch-NG${PV}"
 
 src_prepare() {
 	epatch "${FILESDIR}"/makefile-var.patch
+	if use vlan; then
+		epatch "${FILESDIR}"/add-vlan-support-remove-fddi-general-improvements.patch
+		epatch "${FILESDIR}"/add-vlan-configure-option.patch
+	fi
 
 	if use update-ethercodes; then
 		ewarn "Updating ethercodes.dat requires internet connection"
@@ -43,6 +45,16 @@ src_prepare() {
 
 pkg_preinst() {
 	enewuser arpwatch
+}
+
+src_configure() {
+	local myconf=
+	use fancy-mac && myconf="${myconf} --enable-fancy-mac"
+	use vlan && myconf="${myconf} --enable-vlan-tag"
+
+	econf \
+		${myconf} \
+		|| die "econf failed"
 }
 
 src_install () {
