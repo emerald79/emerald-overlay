@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -33,9 +33,10 @@ CMAKE_BUILD_TYPE=Release
 PREFIX=${GAMES_DATADIR}/${PN}
 
 src_prepare() {
-	sed -i -e 's:__ppc__:__PPC__:' src/s2map.cc || die
+#	sed -i -e 's:__ppc__:__PPC__:' src/s2map.cc || die
 #	sed -i -e '74i#define OF(x) x' src/io/filesystem/{un,}zip.h || die
 #	sed -i -e '22i#define OF(x) x' src/io/filesystem/ioapi.h || die
+	true
 }
 
 src_configure() {
