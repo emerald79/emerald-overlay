@@ -1,8 +1,8 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=3
 inherit eutils versionator cmake-utils games bzr
 
 EBZR_REPO_URI="lp:widelands"
@@ -15,17 +15,18 @@ SLOT="0"
 KEYWORDS="~amd64 ~ppc ~x86"
 IUSE=""
 
-RDEPEND="dev-games/ggz-client-libs
-	dev-lang/lua
-	>=sys-libs/zlib-1.2.5.1-r1
+DEPEND="dev-lang/lua
+	media-libs/libsdl[video]
 	media-libs/sdl-image[jpeg,png]
 	media-libs/sdl-mixer[vorbis]
 	media-libs/sdl-gfx
 	media-libs/sdl-net
+	media-libs/libpng
+	sys-libs/zlib
 	media-libs/glew
-	media-libs/sdl-ttf"
-DEPEND="${RDEPEND}
-	dev-libs/boost"
+	media-libs/sdl-ttf
+	>=dev-libs/boost-1.37"
+RDEPEND="${DEPEND}"
 
 S=${WORKDIR}/${P}
 
