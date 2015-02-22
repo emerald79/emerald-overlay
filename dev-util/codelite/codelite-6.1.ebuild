@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -26,7 +26,7 @@ DEPEND="dev-lang/python:2.7
 	cscope? ( dev-util/cscope )
 	git? ( dev-vcs/git )
 	mysql? ( virtual/mysql )
-	postgres? ( dev-db/postgresql-base )
+	postgres? ( dev-db/postgresql:* )
 	subversion? ( dev-vcs/subversion )"
 
 RDEPEND="${DEPEND}"
