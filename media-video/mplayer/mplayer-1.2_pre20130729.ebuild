@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.2_pre20130729.ebuild,v 1.2 2013/08/11 22:52:39 aballier Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.2_pre20130729.ebuild,v 1.20 2015/05/05 08:21:41 jer Exp $
 
 EAPI=5
 
@@ -10,13 +10,13 @@ ESVN_REPO_URI="svn://svn.mplayerhq.hu/mplayer/trunk"
 
 inherit toolchain-funcs eutils flag-o-matic multilib base ${SVN_ECLASS}
 
-IUSE="3dnow 3dnowext a52 aalib +alsa altivec aqua bidi bindist bl bluray
+IUSE="cpu_flags_x86_3dnow cpu_flags_x86_3dnowext a52 aalib +alsa altivec aqua bidi bl bluray
 bs2b cddb +cdio cdparanoia cpudetection debug dga
-directfb doc dts dv dvb +dvd +dvdnav dxr3 +enca +encode faac faad fbcon
+directfb doc dts dv dvb +dvd +dvdnav +enca +encode faac faad fbcon
 ftp gif ggi gsm +iconv ipv6 jack joystick jpeg jpeg2k kernel_linux ladspa
-+libass libcaca libmpeg2 lirc live lzo mad md5sum +mmx mmxext mng mp3 nas
++libass libcaca libmpeg2 lirc live lzo mad md5sum +cpu_flags_x86_mmx cpu_flags_x86_mmxext mng mp3 nas
 +network nut openal opengl +osdmenu oss png pnm pulseaudio pvr
-radio rar rtc rtmp samba +shm sdl speex sse sse2 ssse3
+radio rar rtc rtmp samba selinux +shm sdl speex cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_ssse3
 tga theora tremor +truetype toolame twolame +unicode v4l vdpau vidix
 vorbis +X x264 xanim xinerama +xscreensaver +xv xvid xvmc
 gmplayer
@@ -64,7 +64,7 @@ RDEPEND+="
 	sys-libs/ncurses
 	app-arch/bzip2
 	sys-libs/zlib
-	|| ( >=media-video/ffmpeg-1.2.1:0= >=media-video/libav-9.8:= )
+	|| ( >=media-video/ffmpeg-1.2.1:0 >=media-video/libav-9.8 )
 	gmplayer? (
 		media-libs/libpng
 		x11-libs/gtk+:2
@@ -100,17 +100,17 @@ RDEPEND+="
 	gsm? ( media-sound/gsm )
 	iconv? ( virtual/libiconv )
 	jack? ( media-sound/jack-audio-connection-kit )
-	jpeg? ( virtual/jpeg )
+	jpeg? ( virtual/jpeg:0 )
 	jpeg2k? ( media-libs/openjpeg:0 )
 	ladspa? ( media-libs/ladspa-sdk )
-	libass? ( >=media-libs/libass-0.9.10[enca?] )
+	libass? ( >=media-libs/libass-0.9.10:=[enca?] )
 	libcaca? ( media-libs/libcaca )
 	libmpeg2? ( media-libs/libmpeg2 )
 	lirc? ( app-misc/lirc )
 	live? ( media-plugins/live )
 	lzo? ( >=dev-libs/lzo-2 )
 	mad? ( media-libs/libmad )
-	mng? ( media-libs/libmng )
+	mng? ( media-libs/libmng:= )
 	mp3? ( media-sound/mpg123 )
 	nas? ( media-libs/nas )
 	nut? ( >=media-libs/libnut-661 )
@@ -150,7 +150,6 @@ ASM_DEP="dev-lang/yasm"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	dga? ( x11-proto/xf86dgaproto )
-	dxr3? ( media-video/em8300-libraries )
 	X? ( ${X_DEPS} )
 	gmplayer? ( x11-proto/xextproto )
 	xinerama? ( x11-proto/xineramaproto )
@@ -162,6 +161,9 @@ DEPEND="${RDEPEND}
 	)
 	x86? ( ${ASM_DEP} )
 	x86-fbsd? ( ${ASM_DEP} )
+"
+RDEPEND+="
+	selinux? ( sec-policy/selinux-mplayer )
 "
 
 SLOT="0"
@@ -180,10 +182,8 @@ fi
 # radio requires oss or alsa backend
 # xvmc requires xvideo support
 REQUIRED_USE="
-	bindist? ( !faac )
 	dga? ( X )
 	dvdnav? ( dvd )
-	dxr3? ( X )
 	enca? ( iconv )
 	ggi? ( X )
 	libass? ( truetype )
@@ -196,6 +196,7 @@ REQUIRED_USE="
 	xscreensaver? ( X )
 	xv? ( X )
 	xvmc? ( xv )"
+RESTRICT="faac? ( bindist )"
 
 PATCHES=( "${FILESDIR}/${P}-compat.patch" )
 
@@ -229,7 +230,7 @@ pkg_setup() {
 
 	if has_version 'media-video/libav' ; then
 		ewarn "Please note that upstream uses media-video/ffmpeg."
-		ewarn "media-video/libav should be fine in theroy but if you"
+		ewarn "media-video/libav should be fine in theory but if you"
 		ewarn "experience any problem, try to move to media-video/ffmpeg."
 	fi
 }
@@ -288,6 +289,7 @@ src_configure() {
 
 	# set LINGUAS
 	[[ -n $LINGUAS ]] && LINGUAS="${LINGUAS/da/dk}"
+	[[ -n $LINGUAS ]] && LINGUAS="${LINGUAS/zh/zh_CN}" #482968
 
 	# mplayer ebuild uses "use foo || --disable-foo" to forcibly disable
 	# compilation in almost every situation. The reason for this is
@@ -495,7 +497,12 @@ src_configure() {
 	# Platform specific flags, hardcoded on amd64 (see below)
 	use cpudetection && myconf+=" --enable-runtime-cpudetection"
 
-	uses="3dnow 3dnowext altivec mmx mmxext shm sse sse2 ssse3"
+	uses="3dnow 3dnowext mmx mmxext sse sse2 ssse3"
+	for i in ${uses}; do
+		myconf+=" $(use_enable cpu_flags_x86_${i} ${i})"
+	done
+
+	uses="altivec shm"
 	for i in ${uses}; do
 		myconf+=" $(use_enable ${i})"
 	done
@@ -512,7 +519,7 @@ src_configure() {
 	###########################
 	myconf+=" --disable-gui"
 	myconf+=" --disable-vesa"
-	uses="dxr3 ggi vdpau xinerama xv"
+	uses="ggi vdpau xinerama xv"
 	for i in ${uses}; do
 		use ${i} || myconf+=" --disable-${i}"
 	done
@@ -560,7 +567,6 @@ src_compile() {
 	# Build only user-requested docs if they're available.
 	if use doc ; then
 		# select available languages from $LINGUAS
-		LINGUAS=${LINGUAS/zh/zh_CN}
 		local ALLOWED_LINGUAS="cs de en es fr hu it pl ru zh_CN"
 		local BUILT_DOCS=""
 		for i in ${LINGUAS} ; do
