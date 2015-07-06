@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.2_pre20150214.ebuild,v 1.6 2015/06/14 19:38:54 maekke Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.2_pre20150214-r1.ebuild,v 1.2 2015/06/22 19:02:59 pacho Exp $
 
 EAPI=5
 
@@ -64,7 +64,7 @@ RDEPEND+="
 	sys-libs/ncurses
 	app-arch/bzip2
 	sys-libs/zlib
-	>=media-video/ffmpeg-2.0:0
+	>=media-video/ffmpeg-2.0:0=
 	gmplayer? (
 		media-libs/libpng:0=
 		x11-libs/gtk+:2
@@ -169,9 +169,9 @@ RDEPEND+="
 SLOT="0"
 LICENSE="GPL-2"
 if [[ ${PV} != *9999* ]]; then
-	KEYWORDS="~alpha amd64 arm hppa ppc ppc64 ~sparc x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
+	KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
 else
-	KEYWORDS="arm hppa"
+	KEYWORDS="~hppa"
 fi
 
 # faac codecs are nonfree
@@ -197,6 +197,11 @@ REQUIRED_USE="
 	xv? ( X )
 	xvmc? ( xv )"
 RESTRICT="faac? ( bindist )"
+
+PATCHES=(
+	# Work with pulseaudio-6, bug #549680, https://trac.mplayerhq.hu/ticket/2241
+	"${FILESDIR}"/${PN}-1.2_pre20150214-pulseaudio-6.0.patch
+)
 
 pkg_setup() {
 	if [[ ${PV} == *9999* ]]; then
