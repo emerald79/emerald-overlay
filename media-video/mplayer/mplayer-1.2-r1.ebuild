@@ -103,7 +103,7 @@ RDEPEND+="
 	jpeg? ( virtual/jpeg:0 )
 	jpeg2k? ( media-libs/openjpeg:0 )
 	ladspa? ( media-libs/ladspa-sdk )
-	libass? ( >=media-libs/libass-0.9.10:=[enca?] )
+	libass? ( >=media-libs/libass-0.9.10:= )
 	libcaca? ( media-libs/libcaca )
 	libmpeg2? ( media-libs/libmpeg2 )
 	lirc? ( app-misc/lirc )
@@ -286,14 +286,9 @@ src_prepare() {
 	sed -i -e '/default_dvd_device/s:/dev/dvd:/dev/cdrom:' configure || die
 
 	if has_version '>=media-video/ffmpeg-2.9'; then
-		epatch "${FILESDIR}/${P}-av_fmt.patch"
-		epatch "${FILESDIR}/${P}-rev.patch"
-		epatch "${FILESDIR}/${P}-chan.patch"
-		epatch "${FILESDIR}/${P}-frame.patch"
-		epatch "${FILESDIR}/${P}-get_buffer.patch"
-		epatch "${FILESDIR}/${P}-pkt_destruct.patch"
-		epatch "${FILESDIR}/${P}-alloc.patch"
-		epatch "${FILESDIR}/${P}-encode.patch"
+		epatch "${FILESDIR}/${PN}-1.2_pre20150730-chan.patch"
+		epatch "${FILESDIR}/${PN}-1.2-get_buffer.patch"
+		epatch "${FILESDIR}/${PN}-1.2_pre20150730-encode.patch"
 	fi
 }
 
