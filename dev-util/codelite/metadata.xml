@@ -2,10 +2,13 @@
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 <maintainer>
-  <email>dirk@liji.de</email>
-  <name>Dirk Schoebel</name>
+	<email>oleg@kaa.org.ua</email>
+	<name>Oleg Kravchenko</name>
 </maintainer>
 <use>
-	<flag name="git">Enable support for Git</flag>
+	<flag name="clang">Enable CLANG code completion support</flag>
+	<flag name="flex">Enable FLEX code completion support</flag>
+	<flag name="sftp">Enable SFTP support</flag>
+	<flag name="webview">Enable internal web browser</flag>
 </use>
 </pkgmetadata>
