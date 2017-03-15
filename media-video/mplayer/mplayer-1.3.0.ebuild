@@ -1,6 +1,5 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/mplayer/mplayer-1.2_pre20150214-r1.ebuild,v 1.7 2015/07/27 04:25:50 jer Exp $
 
 EAPI=5
 
@@ -17,8 +16,8 @@ ftp gif ggi gsm +iconv ipv6 jack joystick jpeg jpeg2k kernel_linux ladspa
 +libass libcaca libmpeg2 lirc live lzo mad md5sum +cpu_flags_x86_mmx cpu_flags_x86_mmxext mng mp3 nas
 +network nut openal opengl +osdmenu oss png pnm pulseaudio pvr
 radio rar rtc rtmp samba selinux +shm sdl speex cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_ssse3
-tga theora tremor +truetype toolame twolame +unicode v4l vdpau vidix
-vorbis +X x264 xanim xinerama +xscreensaver +xv xvid xvmc
+tga theora tremor +truetype toolame twolame +unicode v4l vcd vdpau vidix
+vorbis +X x264 xinerama +xscreensaver +xv xvid xvmc yuv4mpeg
 gmplayer
 zoran"
 
@@ -61,10 +60,10 @@ X_RDEPS="
 # Rar: althrought -gpl version is nice, it cant do most functions normal rars can
 #	nemesi? ( net-libs/libnemesi )
 RDEPEND+="
-	sys-libs/ncurses
+	sys-libs/ncurses:0=
 	app-arch/bzip2
 	sys-libs/zlib
-	>=media-video/ffmpeg-2.0:0=
+	>=media-video/ffmpeg-3.0:0=[vdpau?]
 	gmplayer? (
 		media-libs/libpng:0=
 		x11-libs/gtk+:2
@@ -74,9 +73,9 @@ RDEPEND+="
 	aalib? ( media-libs/aalib )
 	alsa? ( media-libs/alsa-lib )
 	bidi? ( dev-libs/fribidi )
-	bluray? ( >=media-libs/libbluray-0.2.1 )
+	bluray? ( >=media-libs/libbluray-0.2.1:= )
 	bs2b? ( media-libs/libbs2b )
-	cdio? ( dev-libs/libcdio )
+	cdio? ( dev-libs/libcdio:0= dev-libs/libcdio-paranoia )
 	cdparanoia? ( !cdio? ( media-sound/cdparanoia ) )
 	dga? ( x11-libs/libXxf86dga )
 	directfb? ( dev-libs/DirectFB )
@@ -96,14 +95,14 @@ RDEPEND+="
 	enca? ( app-i18n/enca )
 	faad? ( media-libs/faad2 )
 	ggi? ( media-libs/libggi media-libs/libggiwmh )
-	gif? ( media-libs/giflib )
+	gif? ( media-libs/giflib:0= )
 	gsm? ( media-sound/gsm )
 	iconv? ( virtual/libiconv )
 	jack? ( media-sound/jack-audio-connection-kit )
 	jpeg? ( virtual/jpeg:0 )
 	jpeg2k? ( media-libs/openjpeg:0 )
 	ladspa? ( media-libs/ladspa-sdk )
-	libass? ( >=media-libs/libass-0.9.10:=[enca?] )
+	libass? ( >=media-libs/libass-0.9.10:= )
 	libcaca? ( media-libs/libcaca )
 	libmpeg2? ( media-libs/libmpeg2 )
 	lirc? ( app-misc/lirc )
@@ -135,7 +134,6 @@ RDEPEND+="
 	vdpau? ( x11-libs/libvdpau )
 	vorbis? ( !tremor? ( media-libs/libvorbis ) )
 	X? ( ${X_RDEPS}	)
-	xanim? ( media-video/xanim )
 	xinerama? ( x11-libs/libXinerama )
 	xscreensaver? ( x11-libs/libXScrnSaver )
 	xv? ( x11-libs/libXv )
@@ -169,9 +167,9 @@ RDEPEND+="
 SLOT="0"
 LICENSE="GPL-2"
 if [[ ${PV} != *9999* ]]; then
-	KEYWORDS="alpha amd64 arm ~hppa ppc ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
+	KEYWORDS="~amd64 ~arm ~hppa ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
 else
-	KEYWORDS="alpha amd64 arm ~hppa ppc ppc64"
+	KEYWORDS="~arm ~hppa"
 fi
 
 # faac codecs are nonfree
@@ -197,11 +195,6 @@ REQUIRED_USE="
 	xv? ( X )
 	xvmc? ( xv )"
 RESTRICT="faac? ( bindist )"
-
-PATCHES=(
-	# Work with pulseaudio-6, bug #549680, https://trac.mplayerhq.hu/ticket/2241
-	"${FILESDIR}"/${PN}-1.2_pre20150214-pulseaudio-6.0.patch
-)
 
 pkg_setup() {
 	if [[ ${PV} == *9999* ]]; then
@@ -317,7 +310,7 @@ src_configure() {
 		$(use_enable network networking)
 		$(use_enable joystick)
 	"
-	uses="bl bluray enca ftp rtc" # nemesi <- not working with in-tree ebuild
+	uses="bl bluray enca ftp rtc vcd" # nemesi <- not working with in-tree ebuild
 	myconf+=" --disable-nemesi" # nemesi automagic disable
 	for i in ${uses}; do
 		use ${i} || myconf+=" --disable-${i}"
@@ -412,7 +405,7 @@ src_configure() {
 		use ${i} || myconf+=" --disable-lib${i}"
 	done
 
-	uses="faad gif jpeg libmpeg2 live mad mng png pnm speex tga theora tremor xanim"
+	uses="faad gif jpeg libmpeg2 live mad mng png pnm speex tga theora tremor"
 	for i in ${uses}; do
 		if [ "${i}" = "png" ]; then
 			if ! use gmplayer; then
@@ -448,7 +441,7 @@ src_configure() {
 	################
 	# Video Output #
 	################
-	uses="directfb md5sum sdl"
+	uses="directfb md5sum sdl yuv4mpeg"
 	for i in ${uses}; do
 		use ${i} || myconf+=" --disable-${i}"
 	done
