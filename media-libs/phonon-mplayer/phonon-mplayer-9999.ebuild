@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/media-sound/phonon-mplayer/phonon-mplayer-9999.ebuild$
 
-EAPI="3"
+EAPI="5"
 
 inherit cmake-utils git-2 flag-o-matic
 
