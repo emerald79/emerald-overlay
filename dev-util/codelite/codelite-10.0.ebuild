@@ -22,6 +22,8 @@ RDEPEND="${DEPEND}"
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}_dont_strip.patch"
+	epatch "${FILESDIR}/0001-Cmake-FindLibLLDB-module-Add-detection-for-llvb-3.9-.patch"
+	epatch "${FILESDIR}/0002-FindLibLLDB-and-Clang-search-for-more-recent-version.patch"
 }
 
 src_configure() {

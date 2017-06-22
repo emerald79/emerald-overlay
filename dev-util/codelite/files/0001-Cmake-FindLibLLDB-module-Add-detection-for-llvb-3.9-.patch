@@ -1,0 +1,43 @@
+From 027bdc6919bb7ba1ee1124ddd29ebfd338276409 Mon Sep 17 00:00:00 2001
+From: dghart <david@4Pane.co.uk>
+Date: Fri, 10 Feb 2017 18:11:35 +0000
+Subject: [PATCH] Cmake FindLibLLDB module: Add detection for llvb-3.9, which
+ is in debian stretch; and also 3.10 for future use
+
+---
+ cmake/Modules/FindLibLLDB.cmake | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/cmake/Modules/FindLibLLDB.cmake b/cmake/Modules/FindLibLLDB.cmake
+index 02bcbd2..2ea35fa 100644
+--- a/cmake/Modules/FindLibLLDB.cmake
++++ b/cmake/Modules/FindLibLLDB.cmake
+@@ -6,6 +6,8 @@ if (UNIX)
+                      HINTS  
+                      /usr/lib 
+                      /usr/local/lib 
++                     /usr/lib/llvm-3.10/lib
++                     /usr/lib/llvm-3.9/lib
+                      /usr/lib/llvm-3.8/lib
+                      #/usr/lib/llvm-3.7/lib
+                      /usr/lib/llvm-3.6/lib
+@@ -19,12 +21,16 @@ if (UNIX)
+ 
+         find_path(LIBLLDB_INCLUDE_T NAMES lldb/API/SBDebugger.h
+                   HINTS 
++                  /usr/lib/llvm-3.10/include 
++                  /usr/lib/llvm-3.9/include 
+                   /usr/lib/llvm-3.8/include 
+                   #/usr/lib/llvm-3.7/include 
+                   /usr/lib/llvm-3.6/include 
+                   /usr/lib/llvm-3.5/include 
+                   /usr/lib/llvm-3.4/include 
+                   /usr/lib/llvm-3.3/include 
++                  /usr/include/llvm-3.10 
++                  /usr/include/llvm-3.9 
+                   /usr/include/llvm-3.8 
+                   #/usr/include/llvm-3.7 
+                   /usr/include/llvm-3.6 
+-- 
+2.7.1
+

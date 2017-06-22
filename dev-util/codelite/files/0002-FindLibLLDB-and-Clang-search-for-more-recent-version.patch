@@ -1,0 +1,89 @@
+From e76d7dc7cdccb20d4a5c2f403e0813fa7b6f3a56 Mon Sep 17 00:00:00 2001
+From: dghart <david@4Pane.co.uk>
+Date: Fri, 31 Mar 2017 13:39:38 +0100
+Subject: [PATCH] FindLibLLDB and Clang: search for more recent versions, plus
+ some future-proofing
+
+Ubuntu 17.04 will use LLDB 4.0, which we didn't look for.
+---
+ cmake/Modules/FindLibClang.cmake | 12 ++++++++++++
+ cmake/Modules/FindLibLLDB.cmake  | 12 +++++++++---
+ 2 files changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/cmake/Modules/FindLibClang.cmake b/cmake/Modules/FindLibClang.cmake
+index 5acceb4..1991f56 100644
+--- a/cmake/Modules/FindLibClang.cmake
++++ b/cmake/Modules/FindLibClang.cmake
+@@ -5,7 +5,11 @@ if (UNIX)
+                      HINTS  
+                      /usr/lib 
+                      /usr/local/lib 
++                     /usr/lib/llvm-4.2/lib
++                     /usr/lib/llvm-4.1/lib
++                     /usr/lib/llvm-4.0/lib
+                      /usr/lib/llvm-3.8/lib
++                     /usr/lib/llvm-3.9/lib
+                      /usr/lib/llvm-3.7/lib
+                      /usr/lib/llvm-3.6/lib
+                      /usr/lib/llvm-3.5/lib
+@@ -18,12 +22,20 @@ if (UNIX)
+ 
+         find_path(LIBCLANG_INCLUDE_T NAMES clang-c/Index.h
+                   HINTS 
++                  /usr/lib/llvm-4.2/include 
++                  /usr/lib/llvm-4.1/include 
++                  /usr/lib/llvm-4.0/include 
++                  /usr/lib/llvm-3.9/include 
+                   /usr/lib/llvm-3.8/include 
+                   /usr/lib/llvm-3.7/include 
+                   /usr/lib/llvm-3.6/include 
+                   /usr/lib/llvm-3.5/include 
+                   /usr/lib/llvm-3.4/include 
+                   /usr/lib/llvm-3.3/include 
++                  /usr/include/llvm-4.2 
++                  /usr/include/llvm-4.1 
++                  /usr/include/llvm-4.0 
++                  /usr/include/llvm-3.9 
+                   /usr/include/llvm-3.8 
+                   /usr/include/llvm-3.7 
+                   /usr/include/llvm-3.6 
+diff --git a/cmake/Modules/FindLibLLDB.cmake b/cmake/Modules/FindLibLLDB.cmake
+index 2ea35fa..e9c1650 100644
+--- a/cmake/Modules/FindLibLLDB.cmake
++++ b/cmake/Modules/FindLibLLDB.cmake
+@@ -6,7 +6,9 @@ if (UNIX)
+                      HINTS  
+                      /usr/lib 
+                      /usr/local/lib 
+-                     /usr/lib/llvm-3.10/lib
++                     /usr/lib/llvm-4.2/lib
++                     /usr/lib/llvm-4.1/lib
++                     /usr/lib/llvm-4.0/lib
+                      /usr/lib/llvm-3.9/lib
+                      /usr/lib/llvm-3.8/lib
+                      #/usr/lib/llvm-3.7/lib
+@@ -21,7 +23,9 @@ if (UNIX)
+ 
+         find_path(LIBLLDB_INCLUDE_T NAMES lldb/API/SBDebugger.h
+                   HINTS 
+-                  /usr/lib/llvm-3.10/include 
++                  /usr/lib/llvm-4.2/include 
++                  /usr/lib/llvm-4.1/include 
++                  /usr/lib/llvm-4.0/include 
+                   /usr/lib/llvm-3.9/include 
+                   /usr/lib/llvm-3.8/include 
+                   #/usr/lib/llvm-3.7/include 
+@@ -29,7 +33,9 @@ if (UNIX)
+                   /usr/lib/llvm-3.5/include 
+                   /usr/lib/llvm-3.4/include 
+                   /usr/lib/llvm-3.3/include 
+-                  /usr/include/llvm-3.10 
++                  /usr/include/llvm-4.2 
++                  /usr/include/llvm-4.1 
++                  /usr/include/llvm-4.0 
+                   /usr/include/llvm-3.9 
+                   /usr/include/llvm-3.8 
+                   #/usr/include/llvm-3.7 
+-- 
+2.7.1
+
