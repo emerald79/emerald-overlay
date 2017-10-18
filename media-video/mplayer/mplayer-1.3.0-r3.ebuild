@@ -7,7 +7,7 @@ EGIT_REPO_URI="git://git.videolan.org/ffmpeg.git"
 ESVN_REPO_URI="svn://svn.mplayerhq.hu/mplayer/trunk"
 [[ ${PV} = *9999* ]] && SVN_ECLASS="subversion git-2" || SVN_ECLASS=""
 
-inherit toolchain-funcs eutils flag-o-matic multilib base ${SVN_ECLASS}
+inherit toolchain-funcs eutils flag-o-matic multilib base xdg ${SVN_ECLASS}
 
 IUSE="cpu_flags_x86_3dnow cpu_flags_x86_3dnowext a52 aalib +alsa altivec aqua bidi bl bluray
 bs2b cddb +cdio cdparanoia cpudetection debug dga
@@ -658,6 +658,10 @@ pkg_preinst() {
 		rm -rf "${EROOT}/usr/share/mplayer/Skin/default"
 }
 
+pkg_postinst() {
+	xdg_desktop_database_update
+}
+
 pkg_postrm() {
 	# Cleanup stale symlinks
 	[ -L "${EROOT}/usr/share/mplayer/font" -a \
@@ -667,4 +671,5 @@ pkg_postrm() {
 	[ -L "${EROOT}/usr/share/mplayer/subfont.ttf" -a \
 			! -e "${EROOT}/usr/share/mplayer/subfont.ttf" ] && \
 		rm -f "${EROOT}/usr/share/mplayer/subfont.ttf"
+	xdg_desktop_database_update
 }
