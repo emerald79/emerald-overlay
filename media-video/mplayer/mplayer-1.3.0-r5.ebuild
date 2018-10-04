@@ -1,17 +1,17 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI=6
 
 EGIT_REPO_URI="git://git.videolan.org/ffmpeg.git"
 ESVN_REPO_URI="svn://svn.mplayerhq.hu/mplayer/trunk"
 [[ ${PV} = *9999* ]] && SVN_ECLASS="subversion git-2" || SVN_ECLASS=""
 
-inherit toolchain-funcs eutils flag-o-matic multilib base xdg ${SVN_ECLASS}
+inherit toolchain-funcs eutils flag-o-matic multilib xdg ${SVN_ECLASS}
 
 IUSE="cpu_flags_x86_3dnow cpu_flags_x86_3dnowext a52 aalib +alsa altivec aqua bidi bl bluray
 bs2b cddb +cdio cdparanoia cpudetection debug dga
-directfb doc dts dv dvb +dvd +dvdnav +enca +encode faac faad fbcon
+doc dts dv dvb +dvd +dvdnav +enca +encode faac faad fbcon
 ftp gif ggi gsm +iconv ipv6 jack joystick jpeg kernel_linux ladspa
 +libass libcaca libmpeg2 lirc live lzo mad md5sum +cpu_flags_x86_mmx cpu_flags_x86_mmxext mng mp3 nas
 +network nut openal opengl +osdmenu oss png pnm pulseaudio pvr
@@ -21,7 +21,7 @@ vorbis +X x264 xinerama +xscreensaver +xv xvid xvmc yuv4mpeg
 gmplayer
 zoran"
 
-VIDEO_CARDS="s3virge mga tdfx"
+VIDEO_CARDS="mga tdfx"
 for x in ${VIDEO_CARDS}; do
 	IUSE+=" video_cards_${x}"
 done
@@ -78,10 +78,8 @@ RDEPEND+="
 	cdio? ( dev-libs/libcdio:0= dev-libs/libcdio-paranoia )
 	cdparanoia? ( !cdio? ( media-sound/cdparanoia ) )
 	dga? ( x11-libs/libXxf86dga )
-	directfb? ( dev-libs/DirectFB )
 	dts? ( media-libs/libdca )
 	dv? ( media-libs/libdv )
-	dvb? ( virtual/linuxtv-dvb-headers )
 	dvd? ( >=media-libs/libdvdread-4.1.3 )
 	dvdnav? ( >=media-libs/libdvdnav-4.1.3 )
 	encode? (
@@ -140,17 +138,12 @@ RDEPEND+="
 "
 
 X_DEPS="
-	x11-proto/videoproto
-	x11-proto/xf86vidmodeproto
+	x11-base/xorg-proto
 "
 ASM_DEP="dev-lang/yasm"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
-	dga? ( x11-proto/xf86dgaproto )
 	X? ( ${X_DEPS} )
-	gmplayer? ( x11-proto/xextproto )
-	xinerama? ( x11-proto/xineramaproto )
-	xscreensaver? ( x11-proto/scrnsaverproto )
 	amd64? ( ${ASM_DEP} )
 	doc? (
 		dev-libs/libxslt app-text/docbook-xml-dtd
@@ -194,6 +187,8 @@ REQUIRED_USE="
 	xv? ( X )
 	xvmc? ( xv )"
 RESTRICT="faac? ( bindist )"
+
+PATCHES=( "${FILESDIR}/${PN}-1.3-vdpau-x11.patch" )
 
 pkg_setup() {
 	if [[ ${PV} == *9999* ]]; then
@@ -257,13 +252,17 @@ src_unpack() {
 }
 
 src_prepare() {
+	default
+
 	local svf=snapshot_version
 	if [[ ${PV} = *9999* ]]; then
 		# Set SVN version manually
 		subversion_wc_info
 		printf "${ESVN_WC_REVISION}" > $svf
 	else
-		epatch "${FILESDIR}"/${PN}-1.3-CVE-2016-4352.patch
+		eapply "${FILESDIR}"/${PN}-1.3.0-freetype_pkgconfig.patch #655240
+		eapply "${FILESDIR}"/${PN}-1.3-CVE-2016-4352.patch
+		has_version '>media-video/ffmpeg-3.5' && eapply "${FILESDIR}"/${PN}-1.3-ffmpeg4.patch
 	fi
 	if [ ! -f VERSION ] ; then
 		[ -f "$svf" ] || die "Missing ${svf}. Did you generate your snapshot with prepare_mplayer.sh?"
@@ -273,8 +272,6 @@ src_prepare() {
 
 	# fix path to bash executable in configure scripts
 	sed -i -e "1c\#!${EPREFIX}/bin/bash" configure version.sh || die
-
-	base_src_prepare
 
 	# Use sane default for >=virtual/udev-197
 	sed -i -e '/default_dvd_device/s:/dev/dvd:/dev/cdrom:' configure || die
@@ -305,6 +302,7 @@ src_configure() {
 		--disable-svga --disable-svgalib_helper
 		--disable-ass-internal
 		--disable-arts
+		--disable-directfb
 		--disable-kai
 		--disable-libopus
 		--disable-libilbc
@@ -443,13 +441,12 @@ src_configure() {
 	################
 	# Video Output #
 	################
-	uses="directfb md5sum sdl yuv4mpeg"
+	uses="md5sum sdl yuv4mpeg"
 	for i in ${uses}; do
 		use ${i} || myconf+=" --disable-${i}"
 	done
 	use aalib || myconf+=" --disable-aa"
 	use fbcon || myconf+=" --disable-fbdev"
-	use fbcon && use video_cards_s3virge && myconf+=" --enable-s3fb"
 	use libcaca || myconf+=" --disable-caca"
 	use zoran || myconf+=" --disable-zr"
 
@@ -558,7 +555,8 @@ src_configure() {
 }
 
 src_compile() {
-	base_src_compile
+	default
+
 	# Build only user-requested docs if they're available.
 	if use doc ; then
 		# select available languages from $LINGUAS
@@ -590,7 +588,7 @@ src_install() {
 	docinto tech/
 	dodoc DOCS/tech/{*.txt,MAINTAINERS,mpsub.sub,playtree,TODO,wishlist}
 	docinto TOOLS/
-	dodoc -r TOOLS
+	dodoc -r TOOLS/*
 	docinto tech/mirrors/
 	dodoc DOCS/tech/mirrors/*
 
