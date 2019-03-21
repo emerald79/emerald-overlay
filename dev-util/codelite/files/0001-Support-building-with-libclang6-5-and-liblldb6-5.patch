@@ -12,20 +12,24 @@ diff --git a/cmake/Modules/FindLibClang.cmake b/cmake/Modules/FindLibClang.cmake
 index 1991f5606..529ab0a70 100644
 --- a/cmake/Modules/FindLibClang.cmake
 +++ b/cmake/Modules/FindLibClang.cmake
-@@ -5,6 +5,9 @@ if (UNIX)
+@@ -5,6 +5,11 @@ if (UNIX)
                       HINTS  
                       /usr/lib 
                       /usr/local/lib 
++                     /usr/lib/llvm-9.0/lib
++                     /usr/lib/llvm-8.0/lib
 +                     /usr/lib/llvm-7.0/lib
 +                     /usr/lib/llvm-6.0/lib
 +                     /usr/lib/llvm-5.0/lib
                       /usr/lib/llvm-4.2/lib
                       /usr/lib/llvm-4.1/lib
                       /usr/lib/llvm-4.0/lib
-@@ -22,6 +24,9 @@ if (UNIX)
+@@ -22,6 +24,11 @@ if (UNIX)
  
          find_path(LIBCLANG_INCLUDE_T NAMES clang-c/Index.h
                    HINTS 
++                  /usr/lib/llvm-9.0/include
++                  /usr/lib/llvm-8.0/include
 +                  /usr/lib/llvm-7.0/include
 +                  /usr/lib/llvm-6.0/include
 +                  /usr/lib/llvm-5.0/include
@@ -36,20 +40,24 @@ diff --git a/cmake/Modules/FindLibLLDB.cmake b/cmake/Modules/FindLibLLDB.cmake
 index e9c165001..794063b78 100644
 --- a/cmake/Modules/FindLibLLDB.cmake
 +++ b/cmake/Modules/FindLibLLDB.cmake
-@@ -6,6 +6,9 @@ if (UNIX)
+@@ -6,6 +6,11 @@ if (UNIX)
                       HINTS  
                       /usr/lib 
                       /usr/local/lib 
++                     /usr/lib/llvm-9.0/lib
++                     /usr/lib/llvm-8.0/lib
 +                     /usr/lib/llvm-7.0/lib
 +                     /usr/lib/llvm-6.0/lib
 +                     /usr/lib/llvm-5.0/lib
                       /usr/lib/llvm-4.2/lib
                       /usr/lib/llvm-4.1/lib
                       /usr/lib/llvm-4.0/lib
-@@ -23,6 +25,9 @@ if (UNIX)
+@@ -23,6 +25,11 @@ if (UNIX)
  
          find_path(LIBLLDB_INCLUDE_T NAMES lldb/API/SBDebugger.h
                    HINTS 
++                  /usr/lib/llvm-9.0/include
++                  /usr/lib/llvm-8.0/include
 +                  /usr/lib/llvm-7.0/include
 +                  /usr/lib/llvm-6.0/include
 +                  /usr/lib/llvm-5.0/include
