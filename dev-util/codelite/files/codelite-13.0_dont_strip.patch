@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e4d2e58..b48fc0e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -370,7 +370,6 @@ if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES DebugFull)
+ else ()
+     message("-- Building in Release mode")
+     set ( DEBUG_BUILD 0 )
+-    set(CMAKE_INSTALL_DO_STRIP TRUE)
+     message("-- CMAKE_INSTALL_DO_STRIP is " ${CMAKE_INSTALL_DO_STRIP})
+     if(UNIX AND NOT APPLE)
+         ## Avoid hardening-no-relro wrarning messages from lintian
+@@ -383,7 +382,6 @@ else ()
+             add_definitions(${EXTRA_CPPFLAGS})
+             set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS}")
+             set(LINKER_OPTIONS "${EXTRA_LDFLAGS}")
+-            list(APPEND LINKER_OPTIONS "-s") ## strip binaries
+         endif()
+     endif()
+ 
+@@ -406,9 +404,6 @@ else ()
+     message("-- Shared Objects will be written into ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+ 
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")        ## Optimize
+-    if(CMAKE_COMPILER_IS_GNUCXX)
+-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")  ## Strip binary
+-    endif(CMAKE_COMPILER_IS_GNUCXX)
+ 
+     ## In release, add NDEBUG unless explicitly told not to
+     if (NOT PREVENT_WX_ASSERTS MATCHES 0)
