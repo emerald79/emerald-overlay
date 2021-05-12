@@ -6,7 +6,6 @@
 	<name>Dirk Schoebel</name>
 </maintainer>
 <use>
-	<flag name="clang">Enable CLANG code completion support</flag>
 	<flag name="lldb">Enable LLDB debugging support</flag>
 	<flag name="sftp">Enable SFTP support</flag>
 </use>
