@@ -3,7 +3,7 @@
 
 EAPI=7
 
-WX_GTK_VER="3.0"
+WX_GTK_VER="3.0-gtk3"
 
 inherit cmake wxwidgets multilib
 
@@ -19,6 +19,7 @@ IUSE="lldb pch sftp"
 DEPEND="
 	dev-db/sqlite:3
 	net-libs/libssh
+	x11-libs/wxGTK:${WX_GTK_VER}[X]
 	lldb? ( dev-util/lldb )
 	"
 RDEPEND="${DEPEND}"
