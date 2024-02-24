@@ -1,0 +1,225 @@
+From ee49f238a62310b718e2481a6f52691930ddd7e4 Mon Sep 17 00:00:00 2001
+From: Niclas Rosenvik <youremailsarecrap@gmail.com>
+Date: Mon, 5 Feb 2024 15:09:17 +0100
+Subject: [PATCH] fix missing declarations
+
+---
+ CodeLite/MSYS2.cpp                            | 2 ++
+ CodeLite/PlatformCommon.hpp                   | 1 +
+ CodeLite/StdToWX.h                            | 1 +
+ CodeLite/istorage.h                           | 1 +
+ LanguageServer/LanguageServerCluster.cpp      | 1 +
+ LiteEditor/ContextRust.cpp                    | 1 +
+ LiteEditor/clConfigurationSelectionCtrl.h     | 1 +
+ LiteEditor/clPrintout.h                       | 1 +
+ LiteEditor/tabgroupmanager.h                  | 2 +-
+ Plugin/DiffUI.h                               | 1 +
+ Plugin/clEditorEditEventsHandler.cpp          | 1 +
+ Plugin/clFileSystemWorkspaceView.hpp          | 2 ++
+ Plugin/clPluginsFindBar.h                     | 1 +
+ Plugin/wxTerminalCtrl/wxTerminalEvent.hpp     | 1 +
+ Plugin/wxTerminalCtrl/wxTerminalInputCtrl.cpp | 1 +
+ Remoty/sample_codelite_remote_json.cpp        | 2 ++
+ 16 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/CodeLite/MSYS2.cpp b/CodeLite/MSYS2.cpp
+index 33761756a..6324e1de9 100644
+--- a/CodeLite/MSYS2.cpp
++++ b/CodeLite/MSYS2.cpp
+@@ -4,8 +4,10 @@
+ 
+ #include <functional>
+ #include <wx/arrstr.h>
++#include <wx/filename.h>
+ #include <wx/stdpaths.h>
+ #include <wx/tokenzr.h>
++#include <wx/utils.h>
+ 
+ #ifdef __WXMSW__
+ #include <wx/msw/registry.h>
+diff --git a/CodeLite/PlatformCommon.hpp b/CodeLite/PlatformCommon.hpp
+index b863e9ded..94600fac0 100644
+--- a/CodeLite/PlatformCommon.hpp
++++ b/CodeLite/PlatformCommon.hpp
+@@ -4,6 +4,7 @@
+ #include "codelite_exports.h"
+ 
+ #include <vector>
++#include <wx/arrstr.h>
+ #include <wx/string.h>
+ 
+ class WXDLLIMPEXP_CL PlatformCommon
+diff --git a/CodeLite/StdToWX.h b/CodeLite/StdToWX.h
+index 7095fe6c1..73fdf243c 100644
+--- a/CodeLite/StdToWX.h
++++ b/CodeLite/StdToWX.h
+@@ -26,6 +26,7 @@
+ #ifndef STDTOWX_H
+ #define STDTOWX_H
+ 
++#include <wx/arrstr.h>
+ #include <wx/string.h>
+ #include <string>
+ #include "codelite_exports.h"
+diff --git a/CodeLite/istorage.h b/CodeLite/istorage.h
+index cda40bdc9..4c2e3ae84 100644
+--- a/CodeLite/istorage.h
++++ b/CodeLite/istorage.h
+@@ -31,6 +31,7 @@
+ #include "fileentry.h"
+ #include "pptable.h"
+ #include "tag_tree.h"
++#include <wx/filename.h>
+ 
+ #define MAX_SEARCH_LIMIT 250
+ 
+diff --git a/LanguageServer/LanguageServerCluster.cpp b/LanguageServer/LanguageServerCluster.cpp
+index 37eb1c9fe..4d17c8ebd 100644
+--- a/LanguageServer/LanguageServerCluster.cpp
++++ b/LanguageServer/LanguageServerCluster.cpp
+@@ -34,6 +34,7 @@
+ #include <wx/choicdlg.h>
+ #include <wx/richmsgdlg.h>
+ #include <wx/stc/stc.h>
++#include <wx/wupdlock.h>
+ 
+ namespace
+ {
+diff --git a/LiteEditor/ContextRust.cpp b/LiteEditor/ContextRust.cpp
+index 963fc2a3d..e831afdbb 100644
+--- a/LiteEditor/ContextRust.cpp
++++ b/LiteEditor/ContextRust.cpp
+@@ -32,6 +32,7 @@
+ #include "cl_editor_tip_window.h"
+ #include "editor_config.h"
+ 
++#include <wx/xrc/xmlres.h>
+ #include <unordered_set>
+ 
+ ContextRust::ContextRust(clEditor* editor)
+diff --git a/LiteEditor/clConfigurationSelectionCtrl.h b/LiteEditor/clConfigurationSelectionCtrl.h
+index 48e031a7b..b2450d52a 100644
+--- a/LiteEditor/clConfigurationSelectionCtrl.h
++++ b/LiteEditor/clConfigurationSelectionCtrl.h
+@@ -5,6 +5,7 @@
+ #include "cl_command_event.h"
+ 
+ #include <wx/arrstr.h>
++#include <wx/choice.h>
+ #include <wx/panel.h>
+ 
+ #define OPEN_CONFIG_MGR_STR _("Open Workspace Configuration Manager...")
+diff --git a/LiteEditor/clPrintout.h b/LiteEditor/clPrintout.h
+index 8d47e630b..9691d9086 100644
+--- a/LiteEditor/clPrintout.h
++++ b/LiteEditor/clPrintout.h
+@@ -26,6 +26,7 @@
+ #ifndef CLPRINTOUT_H
+ #define CLPRINTOUT_H
+ 
++#include <wx/choice.h>
+ #include <wx/string.h>
+ #include <wx/gdicmn.h>
+ #include <wx/prntbase.h>
+diff --git a/LiteEditor/tabgroupmanager.h b/LiteEditor/tabgroupmanager.h
+index e06d2ca56..a00988023 100644
+--- a/LiteEditor/tabgroupmanager.h
++++ b/LiteEditor/tabgroupmanager.h
+@@ -33,7 +33,7 @@
+ #include <wx/arrstr.h>
+ #include <wx/event.h>
+ #include <wx/string.h>
+-
++#include <wx/xml/xml.h>
+ /**
+  * Each pair consists of the tabgroup name, and an array of the names of the constituent tabs
+  */
+diff --git a/Plugin/DiffUI.h b/Plugin/DiffUI.h
+index 7a2a98982..479548608 100644
+--- a/Plugin/DiffUI.h
++++ b/Plugin/DiffUI.h
+@@ -10,6 +10,7 @@
+ #include "clThemedListCtrl.h"
+ #include "clToolBar.h"
+ 
++#include <wx/frame.h>
+ #include <wx/artprov.h>
+ #include <wx/button.h>
+ #include <wx/dataview.h>
+diff --git a/Plugin/clEditorEditEventsHandler.cpp b/Plugin/clEditorEditEventsHandler.cpp
+index ee9eab587..e7103e64d 100644
+--- a/Plugin/clEditorEditEventsHandler.cpp
++++ b/Plugin/clEditorEditEventsHandler.cpp
+@@ -2,6 +2,7 @@
+ 
+ #include "event_notifier.h"
+ 
++#include <wx/app.h>
+ #include <wx/combobox.h>
+ #include <wx/stc/stc.h>
+ #include <wx/textctrl.h>
+diff --git a/Plugin/clFileSystemWorkspaceView.hpp b/Plugin/clFileSystemWorkspaceView.hpp
+index db6ffc53a..47d1d9849 100644
+--- a/Plugin/clFileSystemWorkspaceView.hpp
++++ b/Plugin/clFileSystemWorkspaceView.hpp
+@@ -7,6 +7,8 @@
+ #include "cl_command_event.h"
+ #include "cl_config.h"
+ 
++#include <wx/choice.h>
++
+ class clThemedButton;
+ class WXDLLIMPEXP_SDK clFileSystemWorkspaceView : public clTreeCtrlPanel
+ {
+diff --git a/Plugin/clPluginsFindBar.h b/Plugin/clPluginsFindBar.h
+index 52677513e..afdf784df 100644
+--- a/Plugin/clPluginsFindBar.h
++++ b/Plugin/clPluginsFindBar.h
+@@ -33,6 +33,7 @@
+ #include <codelite_exports.h>
+ #include <wx/combobox.h>
+ #include <wx/panel.h>
++#include <wx/stattext.h>
+ 
+ class wxStyledTextCtrl;
+ 
+diff --git a/Plugin/wxTerminalCtrl/wxTerminalEvent.hpp b/Plugin/wxTerminalCtrl/wxTerminalEvent.hpp
+index 4f5d3ecff..695a44ca9 100644
+--- a/Plugin/wxTerminalCtrl/wxTerminalEvent.hpp
++++ b/Plugin/wxTerminalCtrl/wxTerminalEvent.hpp
+@@ -4,6 +4,7 @@
+ #include "codelite_exports.h"
+ 
+ #include <wx/arrstr.h>
++#include <wx/event.h>
+ #include <wx/ffile.h>
+ #include <wx/utils.h>
+ 
+diff --git a/Plugin/wxTerminalCtrl/wxTerminalInputCtrl.cpp b/Plugin/wxTerminalCtrl/wxTerminalInputCtrl.cpp
+index 234527554..5390db235 100644
+--- a/Plugin/wxTerminalCtrl/wxTerminalInputCtrl.cpp
++++ b/Plugin/wxTerminalCtrl/wxTerminalInputCtrl.cpp
+@@ -12,6 +12,7 @@
+ #include <wx/dcclient.h>
+ #include <wx/dcgraph.h>
+ #include <wx/dcmemory.h>
++#include <wx/menu.h>
+ #include <wx/tokenzr.h>
+ #include <wx/uiaction.h>
+ 
+diff --git a/Remoty/sample_codelite_remote_json.cpp b/Remoty/sample_codelite_remote_json.cpp
+index b3ee0473c..371d3b8a7 100644
+--- a/Remoty/sample_codelite_remote_json.cpp
++++ b/Remoty/sample_codelite_remote_json.cpp
+@@ -1,6 +1,8 @@
+ #ifndef SAMPLE_CODELITE_REMOTE_JSON_HPP
+ #define SAMPLE_CODELITE_REMOTE_JSON_HPP
+ 
++#include <wx/string.h>
++
+ const wxString DEFAULT_CODELITE_REMOTE_JSON = R"EOF(
+ {
+   "Language Server Plugin": {
+-- 
+2.43.0
+

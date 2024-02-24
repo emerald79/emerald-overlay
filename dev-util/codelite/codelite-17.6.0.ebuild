@@ -37,7 +37,9 @@ RDEPEND="${DEPEND}"
 PATCHES=(
 	"${FILESDIR}/${PN}-17.0_dont_strip.patch"
 	"${FILESDIR}/${PN}-17-disable-automatic-ccache-configuration.patch"
+	"${FILESDIR}/${PN}-17.6.0-fix-missing-declarations.patch"
 )
+
 
 src_unpack() {
 	unpack ${A}
