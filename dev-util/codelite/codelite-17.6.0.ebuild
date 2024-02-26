@@ -10,7 +10,6 @@ inherit cmake xdg wxwidgets multilib
 
 CTAGS_VER="3e173d8d82fd2d3534feff0d822d6de36ca3d74e"
 WXDAP_VER="f8f7afaecf522c7a1126e798310b1e5f986ace6a"
-YAMLCPP_VER="1b50109f7bea60bd382d8ea7befce3d2bd67da5f"
 
 DESCRIPTION="A Free, open source, cross platform C,C++,PHP and Node.js IDE"
 HOMEPAGE="http://www.codelite.org"
@@ -18,7 +17,6 @@ SRC_URI="
 	https://github.com/eranif/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz
 	https://github.com/eranif/ctags/archive/${CTAGS_VER}.tar.gz -> ctags-${CTAGS_VER}.tar.gz
 	https://github.com/eranif/wxdap/archive/${WXDAP_VER}.tar.gz -> wxdap-${WXDAP_VER}.tar.gz
-	https://github.com/jbeder/yaml-cpp/archive/${YAMLCPP_VER}.tar.gz -> yaml-cpp-${YAMLCPP_VER}.tar.gz
 	"
 
 LICENSE="GPL-2"
@@ -29,6 +27,7 @@ IUSE="lldb pch sftp"
 DEPEND="
 	dev-db/sqlite:3
 	net-libs/libssh
+	dev-cpp/yaml-cpp:=
 	x11-libs/wxGTK:${WX_GTK_VER}[X]
 	lldb? ( dev-debug/lldb:= )
 	"
@@ -38,6 +37,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-17.0_dont_strip.patch"
 	"${FILESDIR}/${PN}-17-disable-automatic-ccache-configuration.patch"
 	"${FILESDIR}/${PN}-17.6.0-fix-missing-declarations.patch"
+	"${FILESDIR}/${PN}-17.6.0-use-system-yamp-cpp.patch"
 )
 
 
@@ -46,9 +46,8 @@ src_unpack() {
 
 	mv -f ctags-"${CTAGS_VER}" ctags
 	mv -f wxdap-"${WXDAP_VER}" wxdap
-	mv -f yaml-cpp-"${YAMLCPP_VER}" yaml-cpp
 
-	mv -f -t "${S}"/ ctags wxdap yaml-cpp
+	mv -f -t "${S}"/ ctags wxdap
 }
 
 src_prepare() {

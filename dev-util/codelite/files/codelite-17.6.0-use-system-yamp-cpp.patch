@@ -1,0 +1,39 @@
+From 7bbe0c33b68786356db8b05c07719a16bd17011a Mon Sep 17 00:00:00 2001
+From: Dirk Schoebel <dirk@liji.de>
+Date: Mon, 26 Feb 2024 14:26:13 +0100
+Subject: [PATCH] use system yaml-cpp
+
+---
+ CMakeLists.txt | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1be81f4..0d0fe86 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -842,14 +842,10 @@ endif()
+ add_subdirectory(sdk/wxsqlite3)
+ add_subdirectory(sdk/wxshapeframework)
+ add_subdirectory(sdk/databaselayer)
+-add_subdirectory(yaml-cpp)
+ add_subdirectory(CodeLite)
+ add_subdirectory(Plugin)
+ add_subdirectory(PCH)
+ 
+-# include the yaml-cpp directory
+-include_directories("${CL_SRC_ROOT}/yaml-cpp/include")
+-
+ if(WXC_APP)
+     add_subdirectory(wxcrafter)
+ else()
+@@ -958,7 +954,6 @@ else()
+     add_dependencies(plugin libcodelite)
+     add_dependencies(codelite plugin)
+     add_dependencies(codelite ctagsd)
+-    add_dependencies(codelite yaml-cpp)
+ 
+     # Include our custom plugin.cmake module
+     include(plugin)
+-- 
+2.43.2
+
