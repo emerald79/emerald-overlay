@@ -29,7 +29,7 @@ DEPEND="
 	net-libs/libssh
 	dev-cpp/yaml-cpp:=
 	x11-libs/wxGTK:${WX_GTK_VER}[X]
-	lldb? ( dev-debug/lldb:= )
+	lldb? ( llvm-core/lldb:= )
 	"
 RDEPEND="${DEPEND}"
 
