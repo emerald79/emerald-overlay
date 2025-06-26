@@ -1,0 +1,25 @@
+From 2ef8167e2fea37a1e12652cb5828e0f1f8d30654 Mon Sep 17 00:00:00 2001
+From: Dirk Schoebel <dirk@liji.de>
+Date: Thu, 26 Jun 2025 07:31:52 +0200
+Subject: [PATCH] fix dtl const modification
+
+---
+ Plugin/dtl/Diff.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Plugin/dtl/Diff.hpp b/Plugin/dtl/Diff.hpp
+index 4312028..a569a2e 100644
+--- a/Plugin/dtl/Diff.hpp
++++ b/Plugin/dtl/Diff.hpp
+@@ -165,7 +165,7 @@ public:
+ 
+     bool trivialEnabled() const { return trivial; }
+ 
+-    void enableTrivial() const { this->trivial = true; }
++    void enableTrivial() { this->trivial = true; }
+ 
+     void disableTrivial() { this->trivial = false; }
+ 
+-- 
+2.50.0
+

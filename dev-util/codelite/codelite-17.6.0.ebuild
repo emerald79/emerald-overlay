@@ -38,6 +38,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-17-disable-automatic-ccache-configuration.patch"
 	"${FILESDIR}/${PN}-17.6.0-fix-missing-declarations.patch"
 	"${FILESDIR}/${PN}-17.6.0-use-system-yamp-cpp.patch"
+	"${FILESDIR}/${PN}-17.6.0-fix-dtl-const-modification.patch"
 )
 
 
