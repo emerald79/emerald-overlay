@@ -1,0 +1,37 @@
+From 9b28e1e4722d0dcb63a5efa538607ef8900c782e Mon Sep 17 00:00:00 2001
+From: Dirk Schoebel <dirk@liji.de>
+Date: Fri, 27 Jun 2025 19:30:01 +0200
+Subject: [PATCH] fix missing include (gcc15 build fix)
+
+---
+ src/common/AdaptiveStream.h | 1 +
+ src/common/AdaptiveUtils.h  | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/src/common/AdaptiveStream.h b/src/common/AdaptiveStream.h
+index 88cbf29..8c56b90 100644
+--- a/src/common/AdaptiveStream.h
++++ b/src/common/AdaptiveStream.h
+@@ -15,6 +15,7 @@
+ #include <atomic>
+ #include <condition_variable>
+ #include <chrono>
++#include <cstdint>
+ #include <map>
+ #include <mutex>
+ #include <string>
+diff --git a/src/common/AdaptiveUtils.h b/src/common/AdaptiveUtils.h
+index 7563cb8..e3eee49 100644
+--- a/src/common/AdaptiveUtils.h
++++ b/src/common/AdaptiveUtils.h
+@@ -9,6 +9,7 @@
+ #pragma once
+ 
+ #include <algorithm>
++#include <cstdint>
+ #include <limits>
+ #include <memory>
+ #include <string_view>
+-- 
+2.50.0
+
