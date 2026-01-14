@@ -1,0 +1,24 @@
+From dd5d008ab8e96d0c1adb8626271ff0a20e486c33 Mon Sep 17 00:00:00 2001
+From: Dirk Schoebel <dirk@liji.de>
+Date: Wed, 14 Jan 2026 13:02:07 +0100
+Subject: [PATCH] icu78
+
+---
+ intl/lwbrk/LineBreaker.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/intl/lwbrk/LineBreaker.cpp b/intl/lwbrk/LineBreaker.cpp
+index df8fc67..e57f65f 100644
+--- a/intl/lwbrk/LineBreaker.cpp
++++ b/intl/lwbrk/LineBreaker.cpp
+@@ -565,6 +565,7 @@ GetClass(uint32_t u)
+     /* AKSARA_START = 45,                 [AS] */ CLASS_CHARACTER,
+     /* VIRAMA_FINAL = 46,                 [VF] */ CLASS_CHARACTER,
+     /* VIRAMA = 47,                       [VI] */ CLASS_CHARACTER,
++    /* UNAMBIGUOUS_HYPHEN = 48            [HH] */ CLASS_BREAKABLE,
+   };
+ 
+   static_assert(U_LB_COUNT == mozilla::ArrayLength(sUnicodeLineBreakToClass),
+-- 
+2.52.0
+
