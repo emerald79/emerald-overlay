@@ -1,0 +1,32 @@
+From 69ca263172055fc66e5856f82f21680978e1820e Mon Sep 17 00:00:00 2001
+From: Dirk Schoebel <dirk@liji.de>
+Date: Fri, 16 Jan 2026 10:06:25 +0100
+Subject: [PATCH] disable automatic ccache configuration
+
+---
+ CMakeLists.txt | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fcbef76..e1f6764 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -201,15 +201,6 @@ if(UNIX
+       "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--disable-new-dtags")
+ endif()
+ 
+-if(UNIX)
+-  # Configure CCache if available
+-  find_program(CCACHE_FOUND ccache)
+-  if(CCACHE_FOUND)
+-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+-    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+-  endif(CCACHE_FOUND)
+-endif(UNIX)
+-
+ if(UNIX)
+   set(BUILD_DIRECTORY ${CMAKE_BINARY_DIR})
+ elseif(MINGW)
+-- 
+2.52.0
+
