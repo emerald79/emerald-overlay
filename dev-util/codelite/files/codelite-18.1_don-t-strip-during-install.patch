@@ -1,0 +1,43 @@
+From ed2a784342c2bd83b8dbf5349c063ae67da70efe Mon Sep 17 00:00:00 2001
+From: Dirk Schoebel <dirk@liji.de>
+Date: Thu, 22 Jan 2026 11:02:16 +0100
+Subject: [PATCH] don't strip during install
+
+---
+ CMakeLists.txt | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 00529b2..a7471c3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -623,7 +623,7 @@ if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES DebugFull)
+ else()
+     message("-- Building in Release mode")
+     set(DEBUG_BUILD 0)
+-    set(CMAKE_INSTALL_DO_STRIP TRUE)
++    set(CMAKE_INSTALL_DO_STRIP FALSE)
+     message("-- CMAKE_INSTALL_DO_STRIP is " ${CMAKE_INSTALL_DO_STRIP})
+     if(UNIX AND NOT APPLE)
+         # Avoid hardening-no-relro wrarning message from lintian
+@@ -648,7 +648,6 @@ else()
+             add_definitions(${EXTRA_CPPFLAGS})
+             set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS}")
+             set(LINKER_OPTIONS "${EXTRA_LDFLAGS}")
+-            list(APPEND LINKER_OPTIONS "-s") # strip binaries
+         endif()
+     endif()
+ 
+@@ -671,9 +670,6 @@ else()
+     message("-- Shared Objects will be written into ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+ 
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2") # Optimize
+-    if(CMAKE_COMPILER_IS_GNUCXX)
+-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s") # Strip binary
+-    endif(CMAKE_COMPILER_IS_GNUCXX)
+ 
+     # In release, add NDEBUG unless explicitly told not to
+     if(NOT PREVENT_WX_ASSERTS MATCHES 0)
+-- 
+2.52.0
+

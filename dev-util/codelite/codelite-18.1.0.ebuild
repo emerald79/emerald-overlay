@@ -9,18 +9,17 @@ CMAKE_MAKEFILE_GENERATOR="emake"
 inherit cmake xdg wxwidgets multilib
 
 ASIO_VER="b73dc1d2c0ecb9452a87c26544d7f71e24342df6"
-ASSISTANT_VER="2ff677d4b28908e66400adddc799b6d5d932d1c9"
-CCWRAPPER_VER="53464674ff2c287dfd68f05030d1d79e02d4974c"
+CCWRAPPER_VER="67713440e867493e74ce5c7ce0352b81eb4b726b"
 CJSON_VER="fd1ac4f1791b403af1f7350b1195ac114f9b792b"
-CTAGS_VER="ac5c942b422ca6dc6cdbfd2a0c2d481af1f18f02"
-DTL_VER="32567bb9ec704f09040fb1ed7431a3d967e3df03"
+CTAGS_VER="930be27ea34f28bea45a2af76b974734de8fbcc5"
+DTL_VER="f2651ff29d42abd036980e42d6ee26e598720508"
 HUNSPELL_VER="1d9a9ca8841ac0cd591c95b162301d2502641901"
 LEXILLA_VER="8502988a5eb83fcd281ee5a38533a9f170e6b2bf"
-LIBSSH_VER="854795c654eda518ed6de6c1ebb4e2107fcb2e73"
-LUA_VER="bb8dc5ff01cf725dff2a8dcfe08fb0b81a9a7729"
-LUABRIDGE_VER="a78d4f1469890eb4e795709848ebf57b002ad369"
-OPENSSLCMAKE_VER="7042229f977ca801983116593b2bbd73ae7f2657"
-TINYJSON_VER="d51ef6fc646d60c1400ebde767ebfdd2b7361482"
+LIBSSH_VER="f3fe85f45ef1158c3f97a6abe804df2bcb0df352"
+LLAMACPP_VER="c3776cacabce2ee35f172fb72be7a519752125fa"
+OPENSSLCMAKE_VER="da217f13d734fe51ccc2d9b986d5f16ccba14bdd"
+TINYJSON_VER="a6b0d0d31a05a9f55b4944b3b20f769305eb583a"
+WEBSOCKETPP_VER="c6d7e295bf5a0ab9b5f896720cc1a0e0fdc397a7"
 WXDAP_VER="e390b824ba0ab29e7665229f84f9fa44e8bef468"
 WXSFCODE_VER="b5dc09a9b94b9955ef98111d0f311cb43f32f649"
 YAMLCPP_VER="2f86d13775d119edbb69af52e5f566fd65c6953b"
@@ -31,7 +30,6 @@ HOMEPAGE="http://www.codelite.org"
 SRC_URI="
 	https://github.com/eranif/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz
 	https://github.com/chriskohlhoff/asio/archive/${ASIO_VER}.tar.gz -> asio-${ASIO_VER}.tar.gz
-	https://github.com/eranif/assistant/archive/${ASSISTANT_VER}.tar.gz -> assistant-${ASSISTANT_VER}.tar.gz
 	https://github.com/eranif/cc-wrapper/archive/${CCWRAPPER_VER}.tar.gz -> cc-wrapper-${CCWRAPPER_VER}.tar.gz
 	https://github.com/DaveGamble/cJSON/archive/${CJSON_VER}.tar.gz -> cJSON-${CJSON_VER}.tar.gz
 	https://github.com/eranif/ctags/archive/${CTAGS_VER}.tar.gz -> ctags-${CTAGS_VER}.tar.gz
@@ -39,10 +37,10 @@ SRC_URI="
 	https://github.com/hunspell/hunspell/archive/${HUNSPELL_VER}.tar.gz -> hunspell-${HUNSPELL_VER}.tar.gz
 	https://github.com/eranif/lexilla/archive/${LEXILLA_VER}.tar.gz -> lexilla-${LEXILLA_VER}.tar.gz
 	https://git.libssh.org/projects/libssh.git/snapshot/${LIBSSH_VER}.tar.xz -> libssh-${LIBSSH_VER}.tar.xz
-	https://github.com/eranif/lua/archive/${LUA_VER}.tar.gz -> lua-${LUA_VER}.tar.gz
-	https://github.com/eranif/LuaBridge/archive/${LUABRIDGE_VER}.tar.gz -> LuaBridge-${LUABRIDGE_VER}.tar.gz
-	https://github.com/eranif/openssl-cmake/archive/${OPENSSLCMAKE_VER}.tar.gz -> openssl-cmake-${OPENSSLCMAKE_VER}.tar.gz
+	https://github.com/ggerganov/llama.cpp/archive/${LLAMACPP_VER}.tar.gz -> llama.cpp-${LLAMACPP_VER}.tar.gz
+	https://github.com/janbar/openssl-cmake/archive/${OPENSSLCMAKE_VER}.tar.gz -> openssl-cmake-${OPENSSLCMAKE_VER}.tar.gz
 	https://github.com/eranif/tinyjson/archive/${TINYJSON_VER}.tar.gz -> tinyjson-${TINYJSON_VER}.tar.gz
+	https://github.com/zaphoyd/websocketpp/archive/${WEBSOCKETPP_VER}.tar.gz -> websocketpp-${WEBSOCKETPP_VER}.tar.gz
 	https://github.com/eranif/wxdap/archive/${WXDAP_VER}.tar.gz -> wxdap-${WXDAP_VER}.tar.gz
 	https://github.com/eranif/wxsf-code/archive/${WXSFCODE_VER}.tar.gz -> wxsf-code-${WXSFCODE_VER}.tar.gz
 	https://github.com/jbeder/yaml-cpp/archive/${YAMLCPP_VER}.tar.gz -> yaml-cpp-${YAMLCPP_VER}.tar.gz
@@ -64,7 +62,7 @@ DEPEND="
 RDEPEND="${DEPEND}"
 
 PATCHES=(
-	"${FILESDIR}/${PN}-18.2_don-t-strip-during-install.patch"
+	"${FILESDIR}/${PN}-18.1_don-t-strip-during-install.patch"
 	"${FILESDIR}/${PN}-18.1-disable-automatic-ccache-configuration.patch"
 )
 
@@ -73,7 +71,6 @@ src_unpack() {
 	unpack ${A}
 
 	mv -f asio-"${ASIO_VER}" asio
-	mv -f assistant-"${ASSISTANT_VER}" assistant
 	mv -f cc-wrapper-"${CCWRAPPER_VER}" cc-wrapper
 	mv -f cJSON-"${CJSON_VER}" cJSON
 	mv -f ctags-"${CTAGS_VER}" ctags
@@ -81,16 +78,16 @@ src_unpack() {
 	mv -f hunspell-"${HUNSPELL_VER}" hunspell
 	mv -f lexilla-"${LEXILLA_VER}" lexilla
 	mv -f "${LIBSSH_VER}" libssh
-	mv -f lua-"${LUA_VER}" lua
-	mv -f LuaBridge-"${LUABRIDGE_VER}" LuaBridge
+	mv -f llama.cpp-"${LLAMACPP_VER}" llama.cpp
 	mv -f openssl-cmake-"${OPENSSLCMAKE_VER}" openssl-cmake
 	mv -f tinyjson-"${TINYJSON_VER}" tinyjson
+	mv -f websocketpp-"${WEBSOCKETPP_VER}" websocketpp
 	mv -f wxdap-"${WXDAP_VER}" wxdap
 	mv -f wxsf-code-"${WXSFCODE_VER}" wxsf-code
 	mv -f yaml-cpp-"${YAMLCPP_VER}" yaml-cpp
 	mv -f zlib-"${ZLIB_VER}" zlib
 
-	mv -f -t "${S}"/submodules/ asio assistant cc-wrapper cJSON ctags dtl hunspell lexilla libssh lua LuaBridge openssl-cmake wxdap wxsf-code yaml-cpp zlib
+	mv -f -t "${S}"/submodules/ asio cc-wrapper cJSON ctags dtl hunspell lexilla libssh llama.cpp openssl-cmake websocketpp wxdap wxsf-code yaml-cpp zlib
 	mv -f -t "${S}"/submodules/cc-wrapper/ tinyjson
 }
 
