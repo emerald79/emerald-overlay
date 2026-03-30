@@ -1,0 +1,46 @@
+From 79ee2789763c9892369906d59f0fe8a8957271b9 Mon Sep 17 00:00:00 2001
+From: Dirk Schoebel <dirk@liji.de>
+Date: Mon, 30 Mar 2026 15:59:58 +0200
+Subject: [PATCH] enable switch to use system yaml-cpp
+
+---
+ CMakeLists.txt | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 561ee347d..dce9460ea 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -994,8 +994,16 @@ add_subdirectory(sdk/wxsqlite3)
+ add_subdirectory(sdk/databaselayer)
+ 
+ if(NOT APPLE)
+-  add_subdirectory(submodules/yaml-cpp)
+-  set(LIBYAML_CPP "yaml-cpp")
++  find_package(yaml-cpp)
++  if(USE_SYSTEM_YAML_CPP MATCHES 1 AND YAML_CPP_LIBRARIES)
++    include_directories(${YAML_CPP_INCLUDE_DIR})
++    set(LIBYAML_CPP "${YAML_CPP_LIBRARY_DIR}" "${YAML_CPP_LIBRARIES}")
++    set(SYSTEM_YAML_CPP TRUE)
++    message(STATUS "Using system yaml-cpp")
++  else()
++    add_subdirectory(submodules/yaml-cpp)
++    set(LIBYAML_CPP "yaml-cpp")
++  endif()
+ endif()
+ 
+ if(DEBUG_BUILD)
+@@ -1014,7 +1022,9 @@ if(USE_PCH)
+ endif()
+ 
+ # include the yaml-cpp directory
+-include_directories("${CL_SRC_ROOT}/submodules/yaml-cpp/include")
++if(NOT SYSTEM_YAML_CPP)
++  include_directories("${CL_SRC_ROOT}/submodules/yaml-cpp/include")
++endif()
+ if(UNIX)
+   # On Windows, this is default. Set it OFF for Linux / macOS as well
+   set(BUILD_SHARED_LIBS OFF)
+-- 
+2.53.0
+
